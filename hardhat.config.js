@@ -14,7 +14,7 @@ const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY;
 const TEST_PRIVATE_KEY = process.env.TEST_PRIVATE_KEY;
 
 module.exports = {
-    solidity: "0.8.4",
+    solidity: "0.8.15",
     networks: {
         rinkeby: {
             url: `https://rinkeby.infura.io/v3/${INFURA_PROJECT_ID}`,
