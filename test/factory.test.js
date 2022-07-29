@@ -12,8 +12,8 @@ it('Test adding metadata clone', async function () {
     expect(state.eq(await factory.hashState())).not.to.be.ok;
 });
 
-it('Test mint v4', async function () {
-    const Test = await ethers.getContractFactory('TestERC721');
+['TestERC721', 'TestERC1155'].forEach(testName => it(`Test mint v4 ${testName}`, async function () {
+    const Test = await ethers.getContractFactory(testName);
     const test = await Test.deploy();
     await test.deployed();
 
@@ -28,4 +28,4 @@ it('Test mint v4', async function () {
 
     const metadata = await factory.tokenURI(1);
     expect(metadata).to.be.eq('<some-data>');
-});
+}));

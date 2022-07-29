@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol";
 import "./external/nibbstack/erc721/src/contracts/tokens/nf-token-metadata.sol";
 import "./external/nibbstack/erc721/src/contracts/tokens/erc721-metadata.sol";
 import "./external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
@@ -22,7 +23,7 @@ contract Factory is NFTokenMetadata, Ownable {
     uint[] public tokenIds = [24, 3, 22, 5, 11, 4, 0, 145];
 
     constructor () {
-        nftName = "Factory #2 (2022-07-26)";
+        nftName = "Factory #3 (2022-07-29)";
         nftSymbol = "aaaa";
     }
 
@@ -88,7 +89,11 @@ contract Factory is NFTokenMetadata, Ownable {
         address contractAddress,
         uint tokenId
     ) internal view returns (string memory) {
-        return ERC721Metadata(contractAddress).tokenURI(tokenId);
+        try ERC721Metadata(contractAddress).tokenURI(tokenId) returns (string memory result) {
+            return result;
+        } catch {
+            return IERC1155MetadataURI(contractAddress).uri(tokenId);
+        }
     }
 
     function changeMetadata (
