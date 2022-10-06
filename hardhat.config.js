@@ -20,6 +20,10 @@ module.exports = {
             url: `https://rinkeby.infura.io/v3/${INFURA_PROJECT_ID}`,
             accounts: [`0x${DEPLOYER_PRIVATE_KEY}`]
         },
+        goerli: {
+            url: `https://goerli.infura.io/v3/${INFURA_PROJECT_ID}`,
+            accounts: [`0x${DEPLOYER_PRIVATE_KEY}`]
+        },
         localhost: {
             url: `http://127.0.0.1:8545/`,
             accounts: [`0x${TEST_PRIVATE_KEY}`]
