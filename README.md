@@ -6,4 +6,4 @@ Rinkeby:
 * [0xBA3570AB7e7592842d64B3B245AA92B7378f6513](https://rinkeby.etherscan.io/address/0xBA3570AB7e7592842d64B3B245AA92B7378f6513) at [9e058704](https://github.com/1frag/nft-factory-v1/commit/9e058704b22991a0f301fd77cc99002018c0a8fc) - fix support ERC1155 as metadata source (replace {id} to padded hex string)
 
 Goerli:
-[0x72dFf987F504a1fa370Eeca424ccB256aE4a3A6d](https://goerli.etherscan.io/address/0x72dFf987F504a1fa370Eeca424ccB256aE4a3A6d) - add mintV5, mintV4 updated to add minted items, default sources are targeted to goerli
+* [0x72dFf987F504a1fa370Eeca424ccB256aE4a3A6d](https://goerli.etherscan.io/address/0x72dFf987F504a1fa370Eeca424ccB256aE4a3A6d) - add mintV5, mintV4 updated to add minted items, default sources are targeted to goerli
