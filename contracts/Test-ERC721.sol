@@ -11,7 +11,9 @@ contract TestERC721 is NFTokenMetadata, Ownable {
     constructor () {
         nftName = "Test ERC20";
         nftSymbol = "TEST";
-        super._mint(0x775B572e0CEB816625Af9779Bb686A8b47975876, 5);
-        super._setTokenUri(5, '<some-data>');
+        for (uint i; i < 10; i++) {
+            super._mint(0x775B572e0CEB816625Af9779Bb686A8b47975876, i);
+            super._setTokenUri(i, '<some-data>');
+        }
     }
 }

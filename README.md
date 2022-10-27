@@ -7,3 +7,4 @@ Rinkeby:
 
 Goerli:
 * [0x72dFf987F504a1fa370Eeca424ccB256aE4a3A6d](https://goerli.etherscan.io/address/0x72dFf987F504a1fa370Eeca424ccB256aE4a3A6d) - add mintV5, mintV4 updated to add minted items, default sources are targeted to goerli
+* [0xE1E37CAe8c93026ada3AE91328C94b11450967D0](https://goerli.etherscan.io/address/0xE1E37CAe8c93026ada3AE91328C94b11450967D0) - add mintV6, mintV7

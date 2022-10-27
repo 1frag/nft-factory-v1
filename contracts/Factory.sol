@@ -24,7 +24,7 @@ contract Factory is NFTokenMetadata, Ownable {
     uint[] public tokenIds = [3, 0, 1, 151];
 
     constructor () {
-        nftName = "Factory #4 (2022-10-06)";
+        nftName = "Factory #5 (2022-10-27)";
         nftSymbol = "aaaa";
     }
 
@@ -45,20 +45,20 @@ contract Factory is NFTokenMetadata, Ownable {
     function mintV2 (
         string calldata _uri
     ) external {
-        this.mintV1(msg.sender, _uri);
+        this.mintV1(tx.origin, _uri);
     }
 
     function mintV3 () external {
         uint rndValue = rnd() % contractAddresses.length;
         address contractAddress = contractAddresses[rndValue];
         uint tokenId = tokenIds[rndValue];
-        this.mintV1(msg.sender, getUriFromAnotherCollection(contractAddress, tokenId));
+        this.mintV1(tx.origin, getUriFromAnotherCollection(contractAddress, tokenId));
     }
 
     function mintV4 (address contractAddress, uint tokenId) external {
         contractAddresses.push(contractAddress);
         tokenIds.push(tokenId);
-        this.mintV1(msg.sender, getUriFromAnotherCollection(contractAddress, tokenId));
+        this.mintV1(tx.origin, getUriFromAnotherCollection(contractAddress, tokenId));
     }
 
     function mintV5 (string calldata name, string calldata image) external {
@@ -71,7 +71,23 @@ contract Factory is NFTokenMetadata, Ownable {
                 '"}'
             )
         );
-        this.mintV1(msg.sender, _uri);
+        this.mintV1(tx.origin, _uri);
+    }
+
+    function mintV6 (
+        address contractAddress,
+        uint fromTokenId,
+        uint toTokenId
+    ) external {
+        for (uint tokenId = fromTokenId; tokenId <= toTokenId; tokenId++) {
+            this.mintV4(contractAddress, tokenId);
+        }
+    }
+
+    function mintV7 (uint n) external {
+        for (uint i; i < n; i++) {
+            this.mintV3();
+        }
     }
 
     function addMetadataClone (address contractAddress, uint tokenId) external {

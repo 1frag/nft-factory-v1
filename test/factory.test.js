@@ -55,7 +55,7 @@ it('Test adding metadata clone', async function () {
     )
 );
 
-it('', async function () {
+it('mintV5', async function () {
     const Factory = await ethers.getContractFactory('Factory');
     const factory = await Factory.deploy();
     await factory.deployed();
@@ -69,4 +69,17 @@ it('', async function () {
     expect(uri).to.be.eq(
         'data:application/json;utf8,{"name": "name", "image": "https://random.imagecdn.app/200/200"}'
     );
+});
+
+it('mintV6', async function () {
+    const Test = await ethers.getContractFactory('TestERC721');
+    const test = await Test.deploy();
+    await test.deployed();
+
+    const Factory = await ethers.getContractFactory('Factory');
+    const factory = await Factory.deploy();
+    await factory.deployed();
+
+    const tx = await (await factory.mintV6(test.address, 2, 7)).wait();
+    expect(tx.events.length).to.be.eq(6);
 });
