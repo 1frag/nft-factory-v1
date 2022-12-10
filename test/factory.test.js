@@ -83,3 +83,38 @@ it('mintV6', async function () {
     const tx = await (await factory.mintV6(test.address, 2, 7)).wait();
     expect(tx.events.length).to.be.eq(6);
 });
+
+it('refresh', async function () {
+    const Factory = await ethers.getContractFactory('Factory');
+    const factory = await Factory.deploy();
+    await factory.deployed();
+
+    const tx1 = await (await factory.mintV1(
+        '0x0000000000000000000000000000000000000123',
+        ''
+    )).wait();
+    expect(tx1.events.length).to.be.eq(1);
+
+    const tx2 = await (await factory.refresh(1)).wait();
+    expect(tx2.events.length).to.be.eq(2);
+    expect(tx2.events[0].args._to).to.be.eq(tx2.events[1].args._from);
+    expect(tx2.events[1].args._to).to.be.eq(tx2.events[0].args._from);
+    expect(tx2.events[1].args._to).to.be.eq('0x0000000000000000000000000000000000000123');
+});
+
+it('refreshAll', async function () {
+    const Factory = await ethers.getContractFactory('Factory');
+    const factory = await Factory.deploy();
+    await factory.deployed();
+
+    for (let i = 0; i < 4; i++) {
+        const tx1 = await (await factory.mintV1(
+            '0x0000000000000000000000000000000000000123',
+            ''
+        )).wait();
+        expect(tx1.events.length).to.be.eq(1);
+    }
+
+    const tx2 = await (await factory.refreshAll()).wait();
+    expect(tx2.events.length).to.be.eq(8);
+});

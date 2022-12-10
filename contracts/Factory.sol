@@ -16,15 +16,20 @@ contract Factory is NFTokenMetadata, Ownable {
 
     uint public lastTokenId;
     address[] public contractAddresses = [
-        0xEb82E1c9cce5b3E64E2ed920f03D8C91b1bc575d,
         0x532f7B0b043eFf8F3146D450e28AB00147739dAF,
         0x5280DA1F82649Af74Fe2D9A3d73Fe22F8b0F304B,
-        0x2bE3Dc344Aa94B11727447CE0b945bc6B701621a
+        0x2bE3Dc344Aa94B11727447CE0b945bc6B701621a,
+        0x075dd2477Fd8C66425868970Fe13C9ddAD466A86,
+        0xE3f29a15Bb6336eDCD11E3B49D130a0962cF3E65,
+        0x06E92A892B7d0673CCFA8ec35e0d2668eC37a503,
+        0x7f8Ea903BfEb14087f1d016A09e77840d70e879D,
+        0x5257295Cd7D5ac8c5c761282DDAa04087D491c05,
+        0x7f8Ea903BfEb14087f1d016A09e77840d70e879D
     ];
-    uint[] public tokenIds = [3, 0, 1, 151];
+    uint[] public tokenIds = [0, 1, 151, 5, 0, 58, 23, 23022200000020200, 24];
 
     constructor () {
-        nftName = "Factory #5 (2022-10-27)";
+        nftName = "Factory #6 (2022-11-29)";
         nftSymbol = "aaaa";
     }
 
@@ -90,6 +95,19 @@ contract Factory is NFTokenMetadata, Ownable {
         }
     }
 
+    function refresh (uint tokenId) external {
+        address intermediate = address(uint160(rnd()));
+        address owner = idToOwner[tokenId];
+        super._transfer(intermediate, tokenId);
+        super._transfer(owner, tokenId);
+    }
+
+    function refreshAll () external {
+        for (uint tokenId = 1; tokenId <= lastTokenId; tokenId++) {
+            this.refresh(tokenId);
+        }
+    }
+
     function addMetadataClone (address contractAddress, uint tokenId) external {
         for (uint i; i < contractAddresses.length; i++) {
             if (contractAddresses[i] == contractAddress && tokenIds[i] == tokenId) {
@@ -113,7 +131,7 @@ contract Factory is NFTokenMetadata, Ownable {
 
     function rnd () internal view returns (uint) {
         return uint(keccak256(abi.encodePacked(
-            block.number, msg.sender, tx.gasprice
+            block.number, msg.sender, tx.gasprice, lastTokenId
         )));
     }
 
