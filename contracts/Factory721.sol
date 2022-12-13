@@ -21,6 +21,7 @@ contract Factory721 is NFTokenMetadata, Ownable, BaseFactory, IFactory {
         nftName = _nftName;
         nftSymbol = "Symbol";
         gmr = IGoodMetadataRepository(goodMetadataRepositoryAddress);
+        owner = tx.origin;
     }
 
     function renameContract (string calldata name, string calldata symbol) external override {

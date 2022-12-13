@@ -23,6 +23,7 @@ contract Factory1155 is ERC1155(""), Ownable, BaseFactory, IFactory {
         nftName = _nftName;
         nftSymbol = "Symbol";
         gmr = IGoodMetadataRepository(goodMetadataRepositoryAddress);
+        owner = tx.origin;
     }
 
     string internal nftName;

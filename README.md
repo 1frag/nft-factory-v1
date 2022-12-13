@@ -14,3 +14,4 @@ Goerli:
 * [0x00000005F3b2EE253eA8f61ca2050278253B508e](https://goerli.etherscan.io/address/0x00000005F3b2EE253eA8f61ca2050278253B508e) - Proxy to factory builder implementation
 * [0x056c9C070e5e592d7f5b890E9b65BAaffcA331C0](https://goerli.etherscan.io/address/0x056c9C070e5e592d7f5b890E9b65BAaffcA331C0) - Good metadata repository
 * [0xA39D193E53Dddc64EB4b7258eCD104810B0D0669](https://goerli.etherscan.io/address/0xA39D193E53Dddc64EB4b7258eCD104810B0D0669) - Deterministic deploy factory
+* [0x5e4cD0bbfC8f9A6D21BeAa6fCBc58FdC2e92A3AE](https://goerli.etherscan.io/address/0x5e4cD0bbfC8f9A6D21BeAa6fCBc58FdC2e92A3AE) - BuilderV1 with correct owner set

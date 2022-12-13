@@ -7,18 +7,24 @@ import { Factory1155 } from "./Factory1155.sol";
 contract BuilderV1 {
     address public gmr;
 
+    event Deployed(address addr);
+
     constructor (address _gmr) {
         gmr = _gmr;
     }
 
     function create721 (string calldata name) external returns (address) {
         bytes32 _salt = rnd();
-        return address(new Factory721{salt: _salt}(gmr, name));
+        address _addr = address(new Factory721{salt: _salt}(gmr, name));
+        emit Deployed(_addr);
+        return _addr;
     }
 
     function create1155 (string calldata name) external returns (address) {
         bytes32 _salt = rnd();
-        return address(new Factory1155{salt: _salt}(gmr, name));
+        address _addr = address(new Factory1155{salt: _salt}(gmr, name));
+        emit Deployed(_addr);
+        return _addr;
     }
 
     function rnd () internal view returns (bytes32) {
