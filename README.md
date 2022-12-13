@@ -9,3 +9,8 @@ Goerli:
 * [0x72dFf987F504a1fa370Eeca424ccB256aE4a3A6d](https://goerli.etherscan.io/address/0x72dFf987F504a1fa370Eeca424ccB256aE4a3A6d) - add mintV5, mintV4 updated to add minted items, default sources are targeted to goerli
 * [0xE1E37CAe8c93026ada3AE91328C94b11450967D0](https://goerli.etherscan.io/address/0xE1E37CAe8c93026ada3AE91328C94b11450967D0) - add mintV6, mintV7
 * [0x6461B458D80FBaFB28A0C8Aa9F7445086995C9e6](https://goerli.etherscan.io/address/0x6461B458D80FBaFB28A0C8Aa9F7445086995C9e6) - add refresh, refreshAll
+* [0xcd91221e5fc33733a0f6c6f6c2ca3b20b5b1505c](https://goerli.etherscan.io/address/0xcd91221e5fc33733a0f6c6f6c2ca3b20b5b1505c) - Builder for factories
+* [0xf0255e9b2c831ea58e21156c529f65478380d764](https://goerli.etherscan.io/address/0xf0255e9b2c831ea58e21156c529f65478380d764) - Factory ERC-1155 (one of)
+* [0x00000005F3b2EE253eA8f61ca2050278253B508e](https://goerli.etherscan.io/address/0x00000005F3b2EE253eA8f61ca2050278253B508e) - Proxy to factory builder implementation
+* [0x056c9C070e5e592d7f5b890E9b65BAaffcA331C0](https://goerli.etherscan.io/address/0x056c9C070e5e592d7f5b890E9b65BAaffcA331C0) - Good metadata repository
+* [0xA39D193E53Dddc64EB4b7258eCD104810B0D0669](https://goerli.etherscan.io/address/0xA39D193E53Dddc64EB4b7258eCD104810B0D0669) - Deterministic deploy factory

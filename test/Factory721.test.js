@@ -1,15 +1,36 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
 
-it('Test adding metadata clone', async function () {
-    const Factory = await ethers.getContractFactory('Factory');
-    const factory = await Factory.deploy();
+async function deploy () {
+    const GoodMetadataRepository = await ethers.getContractFactory('GoodMetadataRepository');
+    const goodMetadataRepository = await GoodMetadataRepository.deploy();
+    await goodMetadataRepository.deployed();
+
+    const Factory = await ethers.getContractFactory('Factory721');
+    const factory = await Factory.deploy(goodMetadataRepository.address, 'Test');
+    await factory.deployed();
+    return [factory, goodMetadataRepository]
+}
+
+it('mintV3', async function () {
+    const Test = await ethers.getContractFactory('TestERC721');
+    const test = await Test.deploy();
+    await test.deployed();
+
+    const TestGoodMetadataRepository = await ethers.getContractFactory('TestGoodMetadataRepository');
+    const testGoodMetadataRepository = await TestGoodMetadataRepository.deploy(test.address, 3);
+    await testGoodMetadataRepository.deployed();
+
+    const Factory = await ethers.getContractFactory('Factory721');
+    const factory = await Factory.deploy(testGoodMetadataRepository.address, 'Test');
     await factory.deployed();
 
-    const state = await factory.hashState();
-    await (await factory.addMetadataClone('0x61e2d70388b191d807918de5c2bea9af09c64753', '5')).wait();
+    await factory.mintV3();
+});
 
-    expect(state.eq(await factory.hashState())).not.to.be.ok;
+it('get GoodMetadataRepository address', async function () {
+    const [factory, gmr] = await deploy();
+    expect(await factory.gmr()).to.be.eq(gmr.address);
 });
 
 ['TestERC721', 'TestERC1155'].forEach(testName => it(`Test mint v4 ${testName}`, async function () {
@@ -17,9 +38,7 @@ it('Test adding metadata clone', async function () {
     const test = await Test.deploy();
     await test.deployed();
 
-    const Factory = await ethers.getContractFactory('Factory');
-    const factory = await Factory.deploy();
-    await factory.deployed();
+    const [factory] = await deploy();
 
     const tx = await (await factory.mintV4(test.address, '5')).wait();
     expect(tx.events.length).to.be.eq(1);
@@ -45,9 +64,7 @@ it('Test adding metadata clone', async function () {
     ({tokenId, baseUri, expected}) => it(
         `Test replaceIdInString(${baseUri}, ${tokenId})`,
         async function () {
-            const Factory = await ethers.getContractFactory('Factory');
-            const factory = await Factory.deploy();
-            await factory.deployed();
+            const [factory] = await deploy();
 
             const value = await factory.replaceIdInString(baseUri, tokenId);
             expect(value).to.be.eq(expected);
@@ -56,9 +73,7 @@ it('Test adding metadata clone', async function () {
 );
 
 it('mintV5', async function () {
-    const Factory = await ethers.getContractFactory('Factory');
-    const factory = await Factory.deploy();
-    await factory.deployed();
+    const [factory] = await deploy();
 
     const tx = await (await factory.mintV5('name', 'https://random.imagecdn.app/200/200')).wait();
     expect(tx.events.length).to.be.eq(1);
@@ -76,18 +91,14 @@ it('mintV6', async function () {
     const test = await Test.deploy();
     await test.deployed();
 
-    const Factory = await ethers.getContractFactory('Factory');
-    const factory = await Factory.deploy();
-    await factory.deployed();
+    const [factory] = await deploy();
 
     const tx = await (await factory.mintV6(test.address, 2, 7)).wait();
     expect(tx.events.length).to.be.eq(6);
 });
 
 it('refresh', async function () {
-    const Factory = await ethers.getContractFactory('Factory');
-    const factory = await Factory.deploy();
-    await factory.deployed();
+    const [factory] = await deploy();
 
     const tx1 = await (await factory.mintV1(
         '0x0000000000000000000000000000000000000123',
@@ -103,9 +114,7 @@ it('refresh', async function () {
 });
 
 it('refreshAll', async function () {
-    const Factory = await ethers.getContractFactory('Factory');
-    const factory = await Factory.deploy();
-    await factory.deployed();
+    const [factory] = await deploy();
 
     for (let i = 0; i < 4; i++) {
         const tx1 = await (await factory.mintV1(

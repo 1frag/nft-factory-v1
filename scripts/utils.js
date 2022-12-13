@@ -1,0 +1,2 @@
+exports.factoryAddr = '0xA39D193E53Dddc64EB4b7258eCD104810B0D0669';
+exports.GMRAddr = '0x056c9C070e5e592d7f5b890E9b65BAaffcA331C0';
