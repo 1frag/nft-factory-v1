@@ -5,17 +5,9 @@ import { ERC1155 } from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import { Ownable } from "./external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
 
 import { IGoodMetadataRepository } from "./IGoodMetadataRepository.sol";
-import { IFactory } from "./IFactory.sol";
 import { BaseFactory } from "./BaseFactory.sol";
 
-contract Factory1155 is ERC1155(""), Ownable, BaseFactory, IFactory {
-    uint public lastTokenId;
-
-    IGoodMetadataRepository public gmr;
-
-    mapping(uint256 => string) private idToUri;
-    mapping(uint256 => address) private _owner;
-
+contract Factory1155 is ERC1155(""), Ownable, BaseFactory {
     constructor (
         address goodMetadataRepositoryAddress,
         string memory _nftName
@@ -26,10 +18,11 @@ contract Factory1155 is ERC1155(""), Ownable, BaseFactory, IFactory {
         owner = tx.origin;
     }
 
+    // named
     string internal nftName;
     string internal nftSymbol;
 
-    function renameContract (string calldata name, string calldata symbol) external override {
+    function renameContract (string calldata name, string calldata symbol) external {
         nftName = name;
         nftSymbol = symbol;
     }
@@ -38,6 +31,9 @@ contract Factory1155 is ERC1155(""), Ownable, BaseFactory, IFactory {
         _name = nftName;
     }
 
+    // metadata
+    mapping(uint256 => string) private idToUri;
+
     function uri(uint256 tokenId) public view virtual override returns (string memory) {
         return idToUri[tokenId];
     }
@@ -45,6 +41,30 @@ contract Factory1155 is ERC1155(""), Ownable, BaseFactory, IFactory {
     function _setTokenUri(uint256 _tokenId, string memory _uri) internal {
         idToUri[_tokenId] = _uri;
     }
+
+    function changeMetadata (
+        uint256 _tokenId,
+        string calldata _uri
+    ) external {
+        _setTokenUri(_tokenId, _uri);
+    }
+
+    function changeMetadataBatch (
+        uint256 _left,
+        uint256 _right,
+        string calldata _uri
+    ) external {
+        for (uint tokenId = _left; tokenId <= _right; tokenId++) {
+            _setTokenUri(tokenId, _uri);
+        }
+    }
+
+    // marketplace
+    uint public lastTokenId;
+
+    IGoodMetadataRepository public gmr;
+
+    mapping(uint256 => address) private _owner;
 
     function _afterTokenTransfer(
         address operator,
@@ -128,23 +148,6 @@ contract Factory1155 is ERC1155(""), Ownable, BaseFactory, IFactory {
         return uint(keccak256(abi.encodePacked(
             block.number, msg.sender, tx.gasprice, lastTokenId
         )));
-    }
-
-    function changeMetadata (
-        uint256 _tokenId,
-        string calldata _uri
-    ) external {
-        _setTokenUri(_tokenId, _uri);
-    }
-
-    function changeMetadataBatch (
-        uint256 _left,
-        uint256 _right,
-        string calldata _uri
-    ) external {
-        for (uint tokenId = _left; tokenId <= _right; tokenId++) {
-            _setTokenUri(tokenId, _uri);
-        }
     }
 
     function transfer (address _to, uint256 _tokenId) external {

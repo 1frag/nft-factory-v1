@@ -15,3 +15,4 @@ Goerli:
 * [0x056c9C070e5e592d7f5b890E9b65BAaffcA331C0](https://goerli.etherscan.io/address/0x056c9C070e5e592d7f5b890E9b65BAaffcA331C0) - Good metadata repository
 * [0xA39D193E53Dddc64EB4b7258eCD104810B0D0669](https://goerli.etherscan.io/address/0xA39D193E53Dddc64EB4b7258eCD104810B0D0669) - Deterministic deploy factory
 * [0x5e4cD0bbfC8f9A6D21BeAa6fCBc58FdC2e92A3AE](https://goerli.etherscan.io/address/0x5e4cD0bbfC8f9A6D21BeAa6fCBc58FdC2e92A3AE) - BuilderV1 with correct owner set
+* [0x3384f9dd16a0d6F9043959b1E039257dA69554D6](https://goerli.etherscan.io/address/0x3384f9dd16a0d6F9043959b1E039257dA69554D6) - ComposableBuilderV1, added layer with builders

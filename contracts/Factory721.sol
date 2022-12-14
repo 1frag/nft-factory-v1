@@ -6,10 +6,9 @@ import { ERC721Metadata } from "./external/nibbstack/erc721/src/contracts/tokens
 import { Ownable } from "./external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
 
 import { IGoodMetadataRepository } from "./IGoodMetadataRepository.sol";
-import { IFactory } from "./IFactory.sol";
 import { BaseFactory } from "./BaseFactory.sol";
 
-contract Factory721 is NFTokenMetadata, Ownable, BaseFactory, IFactory {
+contract Factory721 is NFTokenMetadata, Ownable, BaseFactory {
     uint public lastTokenId;
 
     IGoodMetadataRepository public gmr;
@@ -24,7 +23,7 @@ contract Factory721 is NFTokenMetadata, Ownable, BaseFactory, IFactory {
         owner = tx.origin;
     }
 
-    function renameContract (string calldata name, string calldata symbol) external override {
+    function renameContract (string calldata name, string calldata symbol) external {
         nftName = name;
         nftSymbol = symbol;
     }
