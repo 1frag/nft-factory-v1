@@ -1,3 +1,4 @@
+#!/bin/bash
 curl https://github.com/nibbstack/erc721/archive/refs/heads/master.zip -Lo erc721.zip
 unzip erc721.zip
 mkdir -p contracts/external/nibbstack/erc721
