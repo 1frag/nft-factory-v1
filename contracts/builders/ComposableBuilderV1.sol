@@ -9,7 +9,7 @@ contract ComposableBuilderV1 {
 
     constructor (address _gmr, address[] memory _builders) {
         gmr = _gmr;
-        require(_builders.length == 3);
+        require(_builders.length == 4);
         builders = _builders;
     }
 
@@ -23,6 +23,14 @@ contract ComposableBuilderV1 {
 
     function createCondensed (string calldata name) external returns (address) {
         return IBuilders(builders[2]).createCondensed(name, gmr);
+    }
+
+    function multiCreate (
+        string calldata name,
+        uint n, // contacts count
+        uint m // mints count
+    ) external {
+        return IBuilders(builders[3]).multiCreate(name, n, m, gmr);
     }
 
     function _setGMR (address _gmr) external {

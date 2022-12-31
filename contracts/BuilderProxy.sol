@@ -2,8 +2,8 @@
 pragma solidity ^0.8.17;
 
 contract BuilderProxy {
-    address public delegate;
-    address public owner = tx.origin;
+    address internal delegate;
+    address internal owner = tx.origin;
 
     function upgradeDelegate(address newDelegateAddress) public {
         require(msg.sender == owner);
