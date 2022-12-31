@@ -1,6 +1,7 @@
 require('dotenv').config();
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-etherscan");
+const ethers = require('ethers');
 
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
     const accounts = await hre.ethers.getSigners();
@@ -10,9 +11,12 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
     }
 });
 
-const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID;
-const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY;
-const TEST_PRIVATE_KEY = process.env.TEST_PRIVATE_KEY;
+const TEST_WALLET_PRIVATE_KEY = ethers.Wallet.createRandom().privateKey.slice(2);
+
+const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || TEST_WALLET_PRIVATE_KEY;
+const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY || TEST_WALLET_PRIVATE_KEY;
+const TEST_PRIVATE_KEY = process.env.TEST_PRIVATE_KEY || TEST_WALLET_PRIVATE_KEY;
+
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 
 module.exports = {
