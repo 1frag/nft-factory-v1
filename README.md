@@ -17,3 +17,4 @@ Goerli:
 * [0x5e4cD0bbfC8f9A6D21BeAa6fCBc58FdC2e92A3AE](https://goerli.etherscan.io/address/0x5e4cD0bbfC8f9A6D21BeAa6fCBc58FdC2e92A3AE) - BuilderV1 with correct owner set
 * [0x3384f9dd16a0d6F9043959b1E039257dA69554D6](https://goerli.etherscan.io/address/0x3384f9dd16a0d6F9043959b1E039257dA69554D6) - ComposableBuilderV1, added layer with builders
 * [0x4A6624aE8293078cCC2DA70712980344c3438B8B](https://goerli.etherscan.io/address/0x4A6624aE8293078cCC2DA70712980344c3438B8B) - ComposableBuilderV1, added builderV4 with multiCreate
+* [0x6F3a6CbefD6dB1E326bCd48f22fA4EBe6cB3f827](https://goerli.etherscan.io/address/0x6F3a6CbefD6dB1E326bCd48f22fA4EBe6cB3f827) - BuilderV5, builder with manualCreate function

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deployed</title>
+</head>
+<body>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"
+        type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+<script>
+    const builders = [
+        '0xA2b7db50F8a6B2E23eb958c582fBDa12719f6fbd',
+        '0x053B9eC72Fa9b74a827e23A1F5d6D9e23DdaD77e',
+        '0xC9441ac66f20D9531Db922653a1BfEf430b52213',
+        '0xA0F115C93762af4473B09A93db99235332245715',
+        '0x6F3a6CbefD6dB1E326bCd48f22fA4EBe6cB3f827',
+    ];
+    const network = 'goerli';
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum, network);
+
+    async function getDeployedAddresses() {
+        const addresses = [];
+        const iface = new ethers.utils.Interface([
+            'event Deployed(address addr)',
+        ]);
+        for (const builder of builders) {
+            const logs = await provider.getLogs({
+                address: builder,
+                fromBlock: 0,
+            });
+            for (const log of logs) {
+                addresses.push(iface.parseLog(log).args.addr);
+            }
+        }
+        return addresses;
+    }
+
+    async function onLoad() {
+        let _i = 0;
+        for (const address of await getDeployedAddresses()) {
+            const ind = ++_i;
+            $('#tbody-1').html($('#tbody-1').html() + `
+            <tr>
+                <th scope="row">${ind}</th>
+                <td><a href="https://${network}.etherscan.io/address/${address}#code">${address}</a></td>
+                <td id="tbody1-tr-td1-${ind}"></td>
+                <td id="tbody1-tr-td2-${ind}"></td>
+            </tr>
+            `);
+            const contract = new ethers.Contract(
+                address,
+                ['function name() public view returns (string memory)'],
+                provider,
+            );
+            contract.name().then(v => $(`#tbody1-tr-td1-${ind}`).html(v));
+            provider.getCode(address).then(v => {
+                const codeHash = ethers.utils.keccak256(v);
+                const name = {
+                    '0x48680f6b2825c2b3f900087266aef8ddff2d25cbc6cc350f56794fe4d30f06cf': 'Factory721',
+                    '0x5c96f4a28a310dee7ce2f60f874e278fea6ed23b782df3f6a3ca8551c94cc058': 'Factory1155',
+                    '0x51755081a77a6dca2059d668e536a44e32719b865de8701a3e834c7cf9bd975f': 'CondensedNFTs',
+                }[codeHash];
+                $(`#tbody1-tr-td2-${ind}`).html(name);
+                if (!name) {
+                    console.warn('Unknown codehash', codeHash, address);
+                }
+            });
+        }
+    }
+
+    window.addEventListener('load', onLoad);
+</script>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Address</th>
+        <th scope="col">Name</th>
+        <th scope="col">Type</th>
+    </tr>
+    </thead>
+    <tbody id="tbody-1">
+
+    </tbody>
+</table>
+
+</body>
+</html>

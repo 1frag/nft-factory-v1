@@ -7,6 +7,7 @@ const deployed = {
     BuilderV2: '0x053B9eC72Fa9b74a827e23A1F5d6D9e23DdaD77e',
     BuilderV3: '0xC9441ac66f20D9531Db922653a1BfEf430b52213',
     BuilderV4: '0xA0F115C93762af4473B09A93db99235332245715',
+    BuilderV5: '0x6F3a6CbefD6dB1E326bCd48f22fA4EBe6cB3f827',
     ComposableBuilderV1: '0x4a6624ae8293078ccc2da70712980344c3438b8b',
     Factory721: '0x4b24deebac7592572253acc94b0b01a77adf22a4',
     Factory1155: '0xb9a499150114ff097cc2041ddf32b4075fe9d05b',
@@ -102,6 +103,13 @@ async function main() {
         return factoryBuilder4.deployed();
     });
     verify.add(factoryBuilder4.address);
+
+    const factoryBuilder5 = await ifNotDeployed('BuilderV5', async () => {
+        const FactoryBuilder5 = await hre.ethers.getContractFactory('BuilderV5');
+        const factoryBuilder5 = await FactoryBuilder5.deploy();
+        return factoryBuilder5.deployed();
+    });
+    verify.add(factoryBuilder5.address);
 
     const builders = [
         factoryBuilder1.address,
