@@ -20,8 +20,13 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"
+        integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
+    const {sortBy, map} = _;
+
     const builders = [
         '0xA2b7db50F8a6B2E23eb958c582fBDa12719f6fbd',
         '0x053B9eC72Fa9b74a827e23A1F5d6D9e23DdaD77e',
@@ -44,10 +49,13 @@
                 fromBlock: 0,
             });
             for (const log of logs) {
-                addresses.push(iface.parseLog(log).args.addr);
+                addresses.push({
+                    addr: iface.parseLog(log).args.addr,
+                    blockNumber: log.blockNumber,
+                });
             }
         }
-        return addresses;
+        return map(sortBy(addresses, 'blockNumber').reverse(), 'addr');
     }
 
     async function onLoad() {
@@ -95,9 +103,7 @@
         <th scope="col">Type</th>
     </tr>
     </thead>
-    <tbody id="tbody-1">
-
-    </tbody>
+    <tbody id="tbody-1"></tbody>
 </table>
 
 </body>

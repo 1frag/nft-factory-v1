@@ -12,6 +12,7 @@ const deployed = {
     Factory721: '0x4b24deebac7592572253acc94b0b01a77adf22a4',
     Factory1155: '0xb9a499150114ff097cc2041ddf32b4075fe9d05b',
     CondensedNFTs: '0xa3aca6ea5ce6956cdf24097e3c97645259fdd2da',
+    CustomOwnable: '0xbFc09a532689D58F89d0DB7BC86ea2e6cdbB6Bc7',
 };
 
 async function ifNotDeployed (alias, callback) {
@@ -143,6 +144,13 @@ async function main() {
         return {address: deriveAddress(receiptCondensed)};
     });
     verify.add(addressCondensed.address, gmr.address, 'testCondensed');
+
+    const customOwnable = await ifNotDeployed('CustomOwnable', async () => {
+        const CustomOwnable = await hre.ethers.getContractFactory('CustomOwnable');
+        const customOwnable = await CustomOwnable.deploy();
+        return customOwnable.deployed();
+    });
+    verify.add(customOwnable.address);
 
     verify.print();
 }
