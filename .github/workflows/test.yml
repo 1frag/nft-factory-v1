@@ -23,6 +23,6 @@ jobs:
       - name: Install dependencies
         run: npm i
       - name: Download external libraries
-        run: pwd && ./load-external.sh
+        run: ./load-external.sh
       - name: Run tests
         run: npx hardhat test

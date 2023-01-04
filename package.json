@@ -10,8 +10,10 @@
     "hardhat": "^2.10.1"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.7.2",
+    "@openzeppelin/contracts": "^4.7.3",
     "dotenv": "^16.0.1",
-    "solc": "^0.8.15"
+    "elliptic-curve-solidity": "^0.2.4",
+    "solc": "^0.8.15",
+    "truffle": "^5.7.1"
   }
 }
