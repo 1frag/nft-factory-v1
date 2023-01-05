@@ -8,12 +8,12 @@ import "./external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
 error CloneItemAlreadyExists();
 
 contract TestERC721 is NFTokenMetadata, Ownable {
-    constructor () {
+    constructor() {
         nftName = "Test ERC20";
         nftSymbol = "TEST";
         for (uint i; i < 10; i++) {
             super._mint(0x775B572e0CEB816625Af9779Bb686A8b47975876, i);
-            super._setTokenUri(i, '<some-data>');
+            super._setTokenUri(i, "<some-data>");
         }
     }
 }

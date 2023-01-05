@@ -1,21 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import { ERC1155 } from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import { Ownable } from "./external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
+import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import {Ownable} from "./external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
 
-import { IGoodMetadataRepository } from "./IGoodMetadataRepository.sol";
-import { BaseFactory } from "./BaseFactory.sol";
+import {IGoodMetadataRepository} from "./IGoodMetadataRepository.sol";
+import {BaseFactory} from "./BaseFactory.sol";
 
 contract CondensedNFTs is ERC1155(""), Ownable, BaseFactory {
     uint public lastTokenId;
 
     IGoodMetadataRepository public gmr;
 
-    constructor (
-        address goodMetadataRepositoryAddress,
-        string memory _nftName
-    ) {
+    constructor(address goodMetadataRepositoryAddress, string memory _nftName) {
         nftName = _nftName;
         nftSymbol = "Symbol";
         gmr = IGoodMetadataRepository(goodMetadataRepositoryAddress);
@@ -29,14 +26,11 @@ contract CondensedNFTs is ERC1155(""), Ownable, BaseFactory {
         return idToUri[tokenId];
     }
 
-    function changeMetadata (
-        uint256 _tokenId,
-        string calldata _uri
-    ) external {
+    function changeMetadata(uint256 _tokenId, string calldata _uri) external {
         _setTokenUri(_tokenId, _uri);
     }
 
-    function changeMetadataBatch (
+    function changeMetadataBatch(
         uint256 _left,
         uint256 _right,
         string calldata _uri
@@ -54,7 +48,10 @@ contract CondensedNFTs is ERC1155(""), Ownable, BaseFactory {
     string internal nftName;
     string internal nftSymbol;
 
-    function renameContract (string calldata name, string calldata symbol) external {
+    function renameContract(
+        string calldata name,
+        string calldata symbol
+    ) external {
         nftName = name;
         nftSymbol = symbol;
     }
@@ -64,24 +61,30 @@ contract CondensedNFTs is ERC1155(""), Ownable, BaseFactory {
     }
 
     // marketplace
-    function mintV1 (uint amount) external {
+    function mintV1(uint amount) external {
         lastTokenId += 1;
         super._mint(tx.origin, lastTokenId, amount, "");
 
         (address contractAddress, uint tokenId) = gmr.get();
-        string memory _uri = this.getUriFromAnotherCollection(contractAddress, tokenId);
+        string memory _uri = this.getUriFromAnotherCollection(
+            contractAddress,
+            tokenId
+        );
         _setTokenUri(lastTokenId, _uri);
     }
 
-    function mintV2 (uint id, uint amount) external {
+    function mintV2(uint id, uint amount) external {
         super._mint(tx.origin, id, amount, "");
 
         (address contractAddress, uint tokenId) = gmr.get();
-        string memory _uri = this.getUriFromAnotherCollection(contractAddress, tokenId);
+        string memory _uri = this.getUriFromAnotherCollection(
+            contractAddress,
+            tokenId
+        );
         _setTokenUri(id, _uri);
     }
 
-    function mintBatchV1 (
+    function mintBatchV1(
         address to,
         uint256[] memory ids,
         uint256[] memory amounts,
@@ -91,16 +94,19 @@ contract CondensedNFTs is ERC1155(""), Ownable, BaseFactory {
 
         for (uint id; id < ids.length; id++) {
             (address contractAddress, uint tokenId) = gmr.get();
-            string memory _uri = this.getUriFromAnotherCollection(contractAddress, tokenId);
+            string memory _uri = this.getUriFromAnotherCollection(
+                contractAddress,
+                tokenId
+            );
             _setTokenUri(id, _uri);
         }
     }
 
-    function burnV1 (uint amount, uint id) external {
+    function burnV1(uint amount, uint id) external {
         super._burn(tx.origin, id, amount);
     }
 
-    function burnBatchV1 (
+    function burnBatchV1(
         address from,
         uint256[] memory ids,
         uint256[] memory amounts

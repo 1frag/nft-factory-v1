@@ -1,17 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import { ERC1155 } from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import { Ownable } from "./external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
+import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import {Ownable} from "./external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
 
-import { IGoodMetadataRepository } from "./IGoodMetadataRepository.sol";
-import { BaseFactory } from "./BaseFactory.sol";
+import {IGoodMetadataRepository} from "./IGoodMetadataRepository.sol";
+import {BaseFactory} from "./BaseFactory.sol";
 
 contract Factory1155 is ERC1155(""), Ownable, BaseFactory {
-    constructor (
-        address goodMetadataRepositoryAddress,
-        string memory _nftName
-    ) {
+    constructor(address goodMetadataRepositoryAddress, string memory _nftName) {
         nftName = _nftName;
         nftSymbol = "Symbol";
         gmr = IGoodMetadataRepository(goodMetadataRepositoryAddress);
@@ -22,7 +19,10 @@ contract Factory1155 is ERC1155(""), Ownable, BaseFactory {
     string internal nftName;
     string internal nftSymbol;
 
-    function renameContract (string calldata name, string calldata symbol) external {
+    function renameContract(
+        string calldata name,
+        string calldata symbol
+    ) external {
         nftName = name;
         nftSymbol = symbol;
     }
@@ -34,7 +34,9 @@ contract Factory1155 is ERC1155(""), Ownable, BaseFactory {
     // metadata
     mapping(uint256 => string) private idToUri;
 
-    function uri(uint256 tokenId) public view virtual override returns (string memory) {
+    function uri(
+        uint256 tokenId
+    ) public view virtual override returns (string memory) {
         return idToUri[tokenId];
     }
 
@@ -42,14 +44,11 @@ contract Factory1155 is ERC1155(""), Ownable, BaseFactory {
         idToUri[_tokenId] = _uri;
     }
 
-    function changeMetadata (
-        uint256 _tokenId,
-        string calldata _uri
-    ) external {
+    function changeMetadata(uint256 _tokenId, string calldata _uri) external {
         _setTokenUri(_tokenId, _uri);
     }
 
-    function changeMetadataBatch (
+    function changeMetadataBatch(
         uint256 _left,
         uint256 _right,
         string calldata _uri
@@ -77,32 +76,33 @@ contract Factory1155 is ERC1155(""), Ownable, BaseFactory {
         _owner[ids[0]] = to;
     }
 
-    function mintV1 (
-        address _to,
-        string calldata _uri
-    ) external {
+    function mintV1(address _to, string calldata _uri) external {
         lastTokenId += 1;
         super._mint(_to, lastTokenId, 1, "");
         _setTokenUri(lastTokenId, _uri);
     }
 
-    function mintV2 (
-        string calldata _uri
-    ) external {
+    function mintV2(string calldata _uri) external {
         this.mintV1(tx.origin, _uri);
     }
 
-    function mintV3 () external {
+    function mintV3() external {
         (address contractAddress, uint tokenId) = gmr.get();
-        this.mintV1(tx.origin, this.getUriFromAnotherCollection(contractAddress, tokenId));
+        this.mintV1(
+            tx.origin,
+            this.getUriFromAnotherCollection(contractAddress, tokenId)
+        );
     }
 
-    function mintV4 (address contractAddress, uint tokenId) external {
+    function mintV4(address contractAddress, uint tokenId) external {
         gmr.add(contractAddress, tokenId, false);
-        this.mintV1(tx.origin, this.getUriFromAnotherCollection(contractAddress, tokenId));
+        this.mintV1(
+            tx.origin,
+            this.getUriFromAnotherCollection(contractAddress, tokenId)
+        );
     }
 
-    function mintV5 (string calldata name, string calldata image) external {
+    function mintV5(string calldata name, string calldata image) external {
         string memory _uri = string(
             abi.encodePacked(
                 'data:application/json;utf8,{"name": "',
@@ -115,7 +115,7 @@ contract Factory1155 is ERC1155(""), Ownable, BaseFactory {
         this.mintV1(tx.origin, _uri);
     }
 
-    function mintV6 (
+    function mintV6(
         address contractAddress,
         uint fromTokenId,
         uint toTokenId
@@ -125,32 +125,40 @@ contract Factory1155 is ERC1155(""), Ownable, BaseFactory {
         }
     }
 
-    function mintV7 (uint n) external {
+    function mintV7(uint n) external {
         for (uint i; i < n; i++) {
             this.mintV3();
         }
     }
 
-    function refresh (uint tokenId) external {
+    function refresh(uint tokenId) external {
         address intermediate = address(uint160(rnd()));
         address owner = _owner[tokenId];
         super._safeTransferFrom(owner, intermediate, tokenId, 1, "");
         super._safeTransferFrom(intermediate, owner, tokenId, 1, "");
     }
 
-    function refreshAll () external {
+    function refreshAll() external {
         for (uint tokenId = 1; tokenId <= lastTokenId; tokenId++) {
             this.refresh(tokenId);
         }
     }
 
-    function rnd () internal view returns (uint) {
-        return uint(keccak256(abi.encodePacked(
-            block.number, msg.sender, tx.gasprice, lastTokenId
-        )));
+    function rnd() internal view returns (uint) {
+        return
+            uint(
+                keccak256(
+                    abi.encodePacked(
+                        block.number,
+                        msg.sender,
+                        tx.gasprice,
+                        lastTokenId
+                    )
+                )
+            );
     }
 
-    function transfer (address _to, uint256 _tokenId) external {
+    function transfer(address _to, uint256 _tokenId) external {
         address owner = _owner[_tokenId];
         super._safeTransferFrom(owner, _to, _tokenId, 1, "");
     }
