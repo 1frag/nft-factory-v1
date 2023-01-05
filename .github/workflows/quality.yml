@@ -1,4 +1,4 @@
-name: Run tests
+name: Check quality
 
 on:
   pull_request:
@@ -11,6 +11,7 @@ on:
 
 jobs:
   base:
+    name: 'Base preparation'
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -24,6 +25,9 @@ jobs:
         run: npm i
 
   test:
+    name: 'Run tests'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
     needs: base
     steps:
       - name: Download external libraries
@@ -32,6 +36,9 @@ jobs:
         run: npx hardhat test
 
   lint:
+    name: 'Run linter'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
     needs: base
     steps:
       - name: Run linter
