@@ -1,4 +1,4 @@
-name: Run tests
+name: Check quality
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ on:
       - master
 
 jobs:
-  test:
+  quality:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -22,6 +22,8 @@ jobs:
           node-version: '16'
       - name: Install dependencies
         run: npm i
+      - name: Run linter
+        run: npm run lint
       - name: Download external libraries
         run: ./load-external.sh
       - name: Run tests

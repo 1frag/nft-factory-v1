@@ -5,12 +5,12 @@ contract TestGoodMetadataRepository {
     address public contractAddress;
     uint public tokenId;
 
-    constructor (address _contractAddress, uint _tokenId) {
+    constructor(address _contractAddress, uint _tokenId) {
         contractAddress = _contractAddress;
         tokenId = _tokenId;
     }
 
-    function get () external returns (address, uint) {
+    function get() external returns (address, uint) {
         return (contractAddress, tokenId);
     }
 }
