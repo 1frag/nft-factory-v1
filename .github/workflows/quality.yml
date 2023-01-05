@@ -10,8 +10,7 @@ on:
       - master
 
 jobs:
-  base:
-    name: 'Base preparation'
+  quality:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -23,23 +22,9 @@ jobs:
           node-version: '16'
       - name: Install dependencies
         run: npm i
-
-  test:
-    name: 'Run tests'
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    needs: base
-    steps:
+      - name: Run linter
+        run: npm run lint
       - name: Download external libraries
         run: ./load-external.sh
       - name: Run tests
         run: npx hardhat test
-
-  lint:
-    name: 'Run linter'
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    needs: base
-    steps:
-      - name: Run linter
-        run: npm run lint
