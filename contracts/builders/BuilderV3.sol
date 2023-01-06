@@ -2,8 +2,9 @@
 pragma solidity ^0.8.17;
 
 import {CondensedNFTs} from "../CondensedNFTs.sol";
+import {Random} from "../utils/Random.sol";
 
-contract BuilderV3 {
+contract BuilderV3 is Random {
     event Deployed(address addr);
 
     function createCondensed(
@@ -14,14 +15,5 @@ contract BuilderV3 {
         address _addr = address(new CondensedNFTs{salt: _salt}(gmr, name));
         emit Deployed(_addr);
         return _addr;
-    }
-
-    function rnd() internal view returns (bytes32) {
-        return
-            bytes32(
-                keccak256(
-                    abi.encodePacked(block.number, msg.sender, tx.gasprice)
-                )
-            );
     }
 }

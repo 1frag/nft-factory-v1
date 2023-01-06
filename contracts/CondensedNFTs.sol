@@ -4,10 +4,10 @@ pragma solidity ^0.8.17;
 import {ERC1155} from "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import {Ownable} from "./external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
 
-import {IGoodMetadataRepository} from "./IGoodMetadataRepository.sol";
-import {BaseFactory} from "./BaseFactory.sol";
+import {IGoodMetadataRepository} from "./interfaces/IGoodMetadataRepository.sol";
+import {IdReplacer} from "./utils/IdReplacer.sol";
 
-contract CondensedNFTs is ERC1155(""), Ownable, BaseFactory {
+contract CondensedNFTs is ERC1155(""), Ownable, IdReplacer {
     uint public lastTokenId;
 
     IGoodMetadataRepository public gmr;

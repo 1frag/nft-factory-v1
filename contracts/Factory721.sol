@@ -5,10 +5,10 @@ import {NFTokenMetadata} from "./external/nibbstack/erc721/src/contracts/tokens/
 import {ERC721Metadata} from "./external/nibbstack/erc721/src/contracts/tokens/erc721-metadata.sol";
 import {Ownable} from "./external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
 
-import {IGoodMetadataRepository} from "./IGoodMetadataRepository.sol";
-import {BaseFactory} from "./BaseFactory.sol";
+import {IGoodMetadataRepository} from "./interfaces/IGoodMetadataRepository.sol";
+import {IdReplacer} from "./utils/IdReplacer.sol";
 
-contract Factory721 is NFTokenMetadata, Ownable, BaseFactory {
+contract Factory721 is NFTokenMetadata, Ownable, IdReplacer {
     uint public lastTokenId;
 
     IGoodMetadataRepository public gmr;

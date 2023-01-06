@@ -40,10 +40,13 @@ it('get GoodMetadataRepository address', async function () {
 
     const [factory] = await deploy();
 
-    const tx = await (await factory.mintV4(test.address, '5')).wait();
-    expect(tx.events.length).to.be.eq(1);
-    expect(tx.events[0].args[0]).to.be.eq(ethers.constants.AddressZero);
-    expect(tx.events[0].args[1]).to.be.eq(tx.from);
+    await expect(factory.mintV4(test.address, '5'))
+        .to.emit(factory, 'Transfer')
+        .withArgs(
+            ethers.constants.AddressZero,
+            (await ethers.getSigners())[0].address,
+            1,
+        );
 
     const metadata = await factory.tokenURI(1);
     expect(metadata).to.be.eq('<some-data>');

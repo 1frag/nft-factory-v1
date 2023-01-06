@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.15;
 
-import "./external/nibbstack/erc721/src/contracts/tokens/nf-token-metadata.sol";
-import "./external/nibbstack/erc721/src/contracts/tokens/erc721-metadata.sol";
-import "./external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
+import "../external/nibbstack/erc721/src/contracts/tokens/nf-token-metadata.sol";
+import "../external/nibbstack/erc721/src/contracts/tokens/erc721-metadata.sol";
+import "../external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
 
 error CloneItemAlreadyExists();
 

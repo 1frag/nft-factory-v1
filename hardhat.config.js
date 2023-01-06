@@ -1,6 +1,7 @@
 require('dotenv').config();
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-etherscan");
+require('hardhat-contract-sizer');
 const ethers = require('ethers');
 
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {

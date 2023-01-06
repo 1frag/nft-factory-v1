@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import {IBuilders} from "./IBuilders.sol";
+import {IBuilders} from "../interfaces/IBuilders.sol";
+import {IEasyMint} from "../interfaces/IEasyMint.sol";
+import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
 contract ComposableBuilderV1 {
     address public gmr;
@@ -9,7 +11,7 @@ contract ComposableBuilderV1 {
 
     constructor(address _gmr, address[] memory _builders) {
         gmr = _gmr;
-        require(_builders.length == 4);
+        require(_builders.length == 3);
         builders = _builders;
     }
 
@@ -25,12 +27,27 @@ contract ComposableBuilderV1 {
         return IBuilders(builders[2]).createCondensed(name, gmr);
     }
 
+    function getName(
+        string calldata name,
+        uint i
+    ) internal view returns (string memory) {
+        return string.concat(name, " ", Strings.toString(i));
+    }
+
     function multiCreate(
         string calldata name,
         uint n, // contacts count
         uint m // mints count
     ) external {
-        return IBuilders(builders[3]).multiCreate(name, n, m, gmr);
+        for (uint i = 1; i <= n; i++) {
+            address _addr = IBuilders(builders[0]).create721(
+                getName(name, i),
+                gmr
+            );
+            for (uint j; j < m; j++) {
+                IEasyMint(_addr).mintV3();
+            }
+        }
     }
 
     function _setGMR(address _gmr) external {

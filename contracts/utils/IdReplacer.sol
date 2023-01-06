@@ -1,15 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import "@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol";
-import "./external/nibbstack/erc721/src/contracts/tokens/nf-token-metadata.sol";
-import "./external/nibbstack/erc721/src/contracts/tokens/erc721-metadata.sol";
-import "./external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
+import {IERC721Metadata} from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
+import {IERC1155MetadataURI} from "@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol";
 
-import {IGoodMetadataRepository} from "./IGoodMetadataRepository.sol";
-
-contract BaseFactory {
-    // Utils
+contract IdReplacer {
     bytes16 private constant _HEX_SYMBOLS = "0123456789abcdef";
 
     bytes4 private constant SEARCH = "{id}";
@@ -19,7 +14,7 @@ contract BaseFactory {
         address contractAddress,
         uint tokenId
     ) external returns (string memory) {
-        try ERC721Metadata(contractAddress).tokenURI(tokenId) returns (
+        try IERC721Metadata(contractAddress).tokenURI(tokenId) returns (
             string memory result
         ) {
             return result;

@@ -19,3 +19,19 @@ Goerli:
 * [0x4A6624aE8293078cCC2DA70712980344c3438B8B](https://goerli.etherscan.io/address/0x4A6624aE8293078cCC2DA70712980344c3438B8B) - ComposableBuilderV1, added builderV4 with multiCreate
 * [0x6F3a6CbefD6dB1E326bCd48f22fA4EBe6cB3f827](https://goerli.etherscan.io/address/0x6F3a6CbefD6dB1E326bCd48f22fA4EBe6cB3f827) - BuilderV5, builder with manualCreate function
 * [0xbFc09a532689D58F89d0DB7BC86ea2e6cdbB6Bc7](https://goerli.etherscan.io/address/0xbFc09a532689D58F89d0DB7BC86ea2e6cdbB6Bc7) - Added CustomOwnable to test ownership
+
+Group 2023.01.07
+```json
+{
+  "GoodMetadataRepository": "0x5f3649674f2f7743af3604c76bE9cE090F60FE73",
+  "BuilderV1": "0x7d2769ae8e2c7683BfbFe5fbe47C94C8A590F1d4",
+  "BuilderV2": "0xa49B98fC7b546848145Ebe50878C13bC49fbFFA8",
+  "BuilderV3": "0x79e1D2125314b1F40A70b4aDc345BcFFDADD8541",
+  "BuilderV5": "0xE2288A904D0BfeDd84599F4a711944597642bedc",
+  "ComposableBuilderV1": "0x5D6387C3260eE927D8332Ae91A7eBcB2705777a8",
+  "Factory721": "0x6b828234e6fe65aafb20f64b38bf440f2f576496",
+  "Factory1155": "0x94da5fd85f95e29b8476f9afdf1217b4432e7134",
+  "CondensedNFTs": "0x3fdbe2b7f9c5be340389939ce0d15ee8ea9ef77b",
+  "CustomOwnable": "0x8C99947ebB8cb1EAF90245922E35D58CB0259300"
+}
+```

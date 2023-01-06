@@ -16,11 +16,4 @@ interface IBuilders {
         string calldata name,
         address gmr
     ) external returns (address);
-
-    function multiCreate(
-        string calldata name,
-        uint n, // contacts count
-        uint m, // mints count
-        address gmr
-    ) external;
 }
