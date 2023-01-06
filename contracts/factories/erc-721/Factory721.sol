@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import {NFTokenMetadata} from "./external/nibbstack/erc721/src/contracts/tokens/nf-token-metadata.sol";
-import {ERC721Metadata} from "./external/nibbstack/erc721/src/contracts/tokens/erc721-metadata.sol";
-import {Ownable} from "./external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
+import {NFTokenMetadata} from "../../external/nibbstack/erc721/src/contracts/tokens/nf-token-metadata.sol";
+import {ERC721Metadata} from "../../external/nibbstack/erc721/src/contracts/tokens/erc721-metadata.sol";
+import {Ownable} from "../../external/nibbstack/erc721/src/contracts/ownership/ownable.sol";
 
-import {IGoodMetadataRepository} from "./interfaces/IGoodMetadataRepository.sol";
-import {IdReplacer} from "./utils/IdReplacer.sol";
+import {IGoodMetadataRepository} from "../../interfaces/IGoodMetadataRepository.sol";
+import {IdReplacer} from "../../utils/IdReplacer.sol";
 
 contract Factory721 is NFTokenMetadata, Ownable, IdReplacer {
     uint public lastTokenId;

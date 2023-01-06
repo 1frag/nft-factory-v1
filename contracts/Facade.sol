@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import {IBuilders} from "../interfaces/IBuilders.sol";
-import {IEasyMint} from "../interfaces/IEasyMint.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
-contract ComposableBuilderV1 {
+import {IBuilders} from "./interfaces/IBuilders.sol";
+import {IEasyMint} from "./interfaces/IEasyMint.sol";
+
+contract Facade {
     address public gmr;
     address[] public builders;
 

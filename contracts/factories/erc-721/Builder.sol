@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import {Factory721} from "../Factory721.sol";
-import {Random} from "../utils/Random.sol";
+import {Factory721} from "./Factory721.sol";
+import {Random} from "../../utils/Random.sol";
 
-contract BuilderV1 is Random {
+contract BuilderERC721 is Random {
     event Deployed(address addr);
 
     function create721(

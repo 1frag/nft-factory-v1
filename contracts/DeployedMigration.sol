@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-contract BuilderV5 {
+contract DeployedMigration {
     event Deployed(address addr);
 
     function manualCreate(address[] calldata addresses) external {

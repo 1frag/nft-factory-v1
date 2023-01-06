@@ -10,58 +10,58 @@ async function deploy () {
     const testGoodMetadataRepository = await TestGoodMetadataRepository.deploy(test.address, 3);
     await testGoodMetadataRepository.deployed();
 
-    const BuilderV1 = await ethers.getContractFactory('BuilderV1');
-    const builderV1 = await BuilderV1.deploy();
-    await builderV1.deployed();
+    const BuilderERC721 = await ethers.getContractFactory('BuilderERC721');
+    const builderERC721 = await BuilderERC721.deploy();
+    await builderERC721.deployed();
 
-    const BuilderV2 = await ethers.getContractFactory('BuilderV2');
-    const builderV2 = await BuilderV2.deploy();
-    await builderV2.deployed();
+    const BuilderERC1155 = await ethers.getContractFactory('BuilderERC1155');
+    const builderERC1155 = await BuilderERC1155.deploy();
+    await builderERC1155.deployed();
 
-    const BuilderV3 = await ethers.getContractFactory('BuilderV3');
-    const builderV3 = await BuilderV3.deploy();
-    await builderV3.deployed();
+    const BuilderCondensed = await ethers.getContractFactory('BuilderCondensed');
+    const builderCondensed = await BuilderCondensed.deploy();
+    await builderCondensed.deployed();
 
-    const ComposableBuilderV1 = await ethers.getContractFactory('ComposableBuilderV1');
-    const composableBuilderV1 = await ComposableBuilderV1.deploy(
+    const Facade = await ethers.getContractFactory('Facade');
+    const facade = await Facade.deploy(
         testGoodMetadataRepository.address,
         [
-            builderV1.address,
-            builderV2.address,
-            builderV3.address,
+            builderERC721.address,
+            builderERC1155.address,
+            builderCondensed.address,
         ],
     );
-    await composableBuilderV1.deployed();
+    await facade.deployed();
 
-    return [composableBuilderV1, builderV1, builderV2, builderV3, testGoodMetadataRepository];
+    return [facade, BuilderERC721, builderERC1155, builderCondensed, testGoodMetadataRepository];
 }
 
 it('create*', async function () {
-    const [composableBuilderV1] = await deploy();
+    const [facade] = await deploy();
     let tx;
 
-    tx = await (await composableBuilderV1.create721('test1')).wait();
+    tx = await (await facade.create721('test1')).wait();
     expect(tx.events.length).to.be.eq(1);
 
-    tx = await (await composableBuilderV1.create1155('test2')).wait();
+    tx = await (await facade.create1155('test2')).wait();
     expect(tx.events.length).to.be.eq(1);
 
-    tx = await (await composableBuilderV1.createCondensed('test3')).wait();
+    tx = await (await facade.createCondensed('test3')).wait();
     expect(tx.events.length).to.be.eq(1);
 });
 
-it('ComposableBuilderV1.multiCreate', async () => {
-    const BuilderV1 = await ethers.getContractFactory('BuilderV1');
+it('Facade.multiCreate', async () => {
+    const BuilderERC721 = await ethers.getContractFactory('BuilderERC721');
     const Factory721 = await ethers.getContractFactory('Factory721');
 
-    const [composableBuilder] = await deploy();
-    const tx = await composableBuilder.multiCreate('test', 2, 4);
+    const [facade] = await deploy();
+    const tx = await facade.multiCreate('test', 2, 4);
     const receipt = await tx.wait();
     expect(receipt.events.length).to.be.eq(10);
 
     let log;
 
-    log = BuilderV1.interface.parseLog(receipt.events[0]);
+    log = BuilderERC721.interface.parseLog(receipt.events[0]);
     expect(log.name).to.be.eq('Deployed');
 
     const first = log.args.addr;
@@ -75,7 +75,7 @@ it('ComposableBuilderV1.multiCreate', async () => {
         expect(log.args._to).to.be.eq(tx.from);
     }
 
-    log = BuilderV1.interface.parseLog(receipt.events[5]);
+    log = BuilderERC721.interface.parseLog(receipt.events[5]);
     expect(log.name).to.be.eq('Deployed');
 
     const second = log.args.addr;

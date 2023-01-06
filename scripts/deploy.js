@@ -76,62 +76,62 @@ async function main() {
     });
     verify.setArgs(gmr.address);
 
-    const factoryBuilder1 = await ifNotDeployed('BuilderV1', async () => {
-        const FactoryBuilder1 = await hre.ethers.getContractFactory('BuilderV1');
+    const builderERC721 = await ifNotDeployed('BuilderERC721', async () => {
+        const FactoryBuilder1 = await hre.ethers.getContractFactory('BuilderERC721');
         const factoryBuilder1 = await FactoryBuilder1.deploy();
         return factoryBuilder1.deployed();
     });
-    verify.setArgs(factoryBuilder1.address);
+    verify.setArgs(builderERC721.address);
 
-    const factoryBuilder2 = await ifNotDeployed('BuilderV2', async () => {
-        const FactoryBuilder2 = await hre.ethers.getContractFactory('BuilderV2');
-        const factoryBuilder2 = await FactoryBuilder2.deploy();
-        return factoryBuilder2.deployed();
+    const builderERC1155 = await ifNotDeployed('BuilderERC1155', async () => {
+        const BuilderERC1155 = await hre.ethers.getContractFactory('BuilderERC1155');
+        const builderERC1155 = await BuilderERC1155.deploy();
+        return builderERC1155.deployed();
     });
-    verify.setArgs(factoryBuilder2.address);
+    verify.setArgs(builderERC1155.address);
 
-    const factoryBuilder3 = await ifNotDeployed('BuilderV3', async () => {
-        const FactoryBuilder3 = await hre.ethers.getContractFactory('BuilderV3');
-        const factoryBuilder3 = await FactoryBuilder3.deploy();
-        return factoryBuilder3.deployed();
+    const builderCondensed = await ifNotDeployed('BuilderCondensed', async () => {
+        const BuilderCondensed = await hre.ethers.getContractFactory('BuilderCondensed');
+        const builderCondensed = await BuilderCondensed.deploy();
+        return builderCondensed.deployed();
     });
-    verify.setArgs(factoryBuilder3.address);
+    verify.setArgs(builderCondensed.address);
 
-    const factoryBuilder5 = await ifNotDeployed('BuilderV5', async () => {
-        const FactoryBuilder5 = await hre.ethers.getContractFactory('BuilderV5');
+    const factoryBuilder5 = await ifNotDeployed('DeployedMigration', async () => {
+        const FactoryBuilder5 = await hre.ethers.getContractFactory('DeployedMigration');
         const factoryBuilder5 = await FactoryBuilder5.deploy();
         return factoryBuilder5.deployed();
     });
     verify.setArgs(factoryBuilder5.address);
 
     const builders = [
-        factoryBuilder1.address,
-        factoryBuilder2.address,
-        factoryBuilder3.address,
+        builderERC721.address,
+        builderERC1155.address,
+        builderCondensed.address,
     ];
-    const composableBuilderV1 = await ifNotDeployed('ComposableBuilderV1', async () => {
-        const ComposableBuilderV1 = await hre.ethers.getContractFactory('ComposableBuilderV1');
-        const composableBuilderV1 = await ComposableBuilderV1.deploy(
+    const facade = await ifNotDeployed('Facade', async () => {
+        const Facade = await hre.ethers.getContractFactory('Facade');
+        const facade = await Facade.deploy(
             gmr.address, builders,
         );
-        return composableBuilderV1.deployed();
+        return facade.deployed();
     });
-    verify.setArgs(composableBuilderV1.address, gmr.address, builders);
+    verify.setArgs(facade.address, gmr.address, builders);
 
     const address721 = await ifNotDeployed('Factory721', async () => {
-        const receipt721 = await (await composableBuilderV1.create721('test721')).wait();
+        const receipt721 = await (await facade.create721('test721')).wait();
         return {address: deriveAddress(receipt721)};
     });
     verify.setArgs(address721.address, gmr.address, 'test721');
 
     const address1155 = await ifNotDeployed('Factory1155', async () => {
-        const receipt1155 = await (await composableBuilderV1.create1155('test1155')).wait();
+        const receipt1155 = await (await facade.create1155('test1155')).wait();
         return {address: deriveAddress(receipt1155)};
     });
     verify.setArgs(address1155.address, gmr.address, 'test1155');
 
     const addressCondensed = await ifNotDeployed('CondensedNFTs', async () => {
-        const receiptCondensed = await (await composableBuilderV1.createCondensed('testCondensed')).wait();
+        const receiptCondensed = await (await facade.createCondensed('testCondensed')).wait();
         return {address: deriveAddress(receiptCondensed)};
     });
     verify.setArgs(addressCondensed.address, gmr.address, 'testCondensed');

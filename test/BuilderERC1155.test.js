@@ -6,25 +6,25 @@ async function deploy () {
     const goodMetadataRepository = await GoodMetadataRepository.deploy();
     await goodMetadataRepository.deployed();
 
-    const BuilderV2 = await ethers.getContractFactory('BuilderV2');
-    const builderV2 = await BuilderV2.deploy();
-    await builderV2.deployed();
-    return [builderV2, goodMetadataRepository]
+    const BuilderERC1155 = await ethers.getContractFactory('BuilderERC1155');
+    const builderERC1155 = await BuilderERC1155.deploy();
+    await builderERC1155.deployed();
+    return [builderERC1155, goodMetadataRepository]
 }
 
 it('owner of created Factory1155', async function () {
-    const [builderV2, gmr] = await deploy();
-    const tx = await builderV2.create1155('test1155', gmr.address);
+    const [builderERC1155, gmr] = await deploy();
+    const tx = await builderERC1155.create1155('test1155', gmr.address);
     const receipt = await tx.wait();
 
     const Factory1155 = await ethers.getContractFactory('Factory1155');
     const factory = Factory1155.attach(receipt.events[0].args.addr);
-    expect(await factory.owner()).to.be.eq(builderV2.signer.address);
+    expect(await factory.owner()).to.be.eq(builderERC1155.signer.address);
 });
 
 it('gmr of created Factory1155', async function () {
-    const [builderV2, gmr] = await deploy();
-    const tx = await builderV2.create1155('test1155', gmr.address);
+    const [builderERC1155, gmr] = await deploy();
+    const tx = await builderERC1155.create1155('test1155', gmr.address);
     const receipt = await tx.wait();
 
     const Factory1155 = await ethers.getContractFactory('Factory1155');
@@ -33,8 +33,8 @@ it('gmr of created Factory1155', async function () {
 });
 
 it('name of created Factory1155', async function () {
-    const [builderV2, gmr] = await deploy();
-    const tx = await builderV2.create1155('test1155', gmr.address);
+    const [builderERC1155, gmr] = await deploy();
+    const tx = await builderERC1155.create1155('test1155', gmr.address);
     const receipt = await tx.wait();
 
     const Factory1155 = await ethers.getContractFactory('Factory1155');
