@@ -2,12 +2,12 @@ const hre = require('hardhat');
 const { GMRAddr } = require("./utils");
 
 async function main () {
-    const BuilderERC721 = await hre.ethers.getContractFactory('BuilderERC721');
-    const builderERC721 = await BuilderERC721.deploy(GMRAddr);
-    await builderERC721.deployed();
+    const FactoryERC721 = await hre.ethers.getContractFactory('FactoryERC721');
+    const factoryERC721 = await FactoryERC721.deploy(GMRAddr);
+    await factoryERC721.deployed();
 
     // 0xfC5D067Afc9C243234fFdA18f50cc190Fa959416
-    console.log('BuilderERC721 deployed to:', builderERC721.address);
+    console.log('FactoryERC721 deployed to:', factoryERC721.address);
 }
 
 main()

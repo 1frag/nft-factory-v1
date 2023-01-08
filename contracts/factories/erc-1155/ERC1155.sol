@@ -7,28 +7,24 @@ import {Ownable} from "../../external/nibbstack/erc721/src/contracts/ownership/o
 import {IGoodMetadataRepository} from "../../interfaces/IGoodMetadataRepository.sol";
 import {IdReplacer} from "../../utils/IdReplacer.sol";
 
-contract Factory1155 is ERC1155(""), Ownable, IdReplacer {
-    constructor(address goodMetadataRepositoryAddress, string memory _nftName) {
-        nftName = _nftName;
-        nftSymbol = "Symbol";
+contract CustomERC1155 is ERC1155(""), Ownable, IdReplacer {
+    constructor(address goodMetadataRepositoryAddress, string memory _name) {
+        name = _name;
+        symbol = "Symbol";
         gmr = IGoodMetadataRepository(goodMetadataRepositoryAddress);
         owner = tx.origin;
     }
 
     // named
-    string internal nftName;
-    string internal nftSymbol;
+    string public name;
+    string public symbol;
 
     function renameContract(
-        string calldata name,
-        string calldata symbol
+        string calldata _name,
+        string calldata _symbol
     ) external {
-        nftName = name;
-        nftSymbol = symbol;
-    }
-
-    function name() external view returns (string memory _name) {
-        _name = nftName;
+        name = _name;
+        symbol = _symbol;
     }
 
     // metadata
@@ -66,12 +62,12 @@ contract Factory1155 is ERC1155(""), Ownable, IdReplacer {
     mapping(uint256 => address) private _owner;
 
     function _afterTokenTransfer(
-        address operator,
-        address from,
+        address, // operator
+        address, // from
         address to,
         uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
+        uint256[] memory, // amounts
+        bytes memory // data
     ) internal override {
         _owner[ids[0]] = to;
     }
@@ -102,11 +98,11 @@ contract Factory1155 is ERC1155(""), Ownable, IdReplacer {
         );
     }
 
-    function mintV5(string calldata name, string calldata image) external {
+    function mintV5(string calldata tokenName, string calldata image) external {
         string memory _uri = string(
             abi.encodePacked(
                 'data:application/json;utf8,{"name": "',
-                name,
+                tokenName,
                 '", "image": "',
                 image,
                 '"}'

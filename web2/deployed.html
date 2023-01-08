@@ -79,8 +79,8 @@
             provider.getCode(address).then(v => {
                 const codeHash = ethers.utils.keccak256(v);
                 const name = {
-                    '0x48680f6b2825c2b3f900087266aef8ddff2d25cbc6cc350f56794fe4d30f06cf': 'Factory721',
-                    '0x5c96f4a28a310dee7ce2f60f874e278fea6ed23b782df3f6a3ca8551c94cc058': 'Factory1155',
+                    '0x48680f6b2825c2b3f900087266aef8ddff2d25cbc6cc350f56794fe4d30f06cf': 'ERC721',
+                    '0x5c96f4a28a310dee7ce2f60f874e278fea6ed23b782df3f6a3ca8551c94cc058': 'ERC1155',
                     '0x51755081a77a6dca2059d668e536a44e32719b865de8701a3e834c7cf9bd975f': 'CondensedNFTs',
                 }[codeHash];
                 $(`#tbody1-tr-td2-${ind}`).html(name);

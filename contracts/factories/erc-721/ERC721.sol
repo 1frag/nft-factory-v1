@@ -8,7 +8,7 @@ import {Ownable} from "../../external/nibbstack/erc721/src/contracts/ownership/o
 import {IGoodMetadataRepository} from "../../interfaces/IGoodMetadataRepository.sol";
 import {IdReplacer} from "../../utils/IdReplacer.sol";
 
-contract Factory721 is NFTokenMetadata, Ownable, IdReplacer {
+contract CustomERC721 is NFTokenMetadata, Ownable, IdReplacer {
     uint public lastTokenId;
 
     IGoodMetadataRepository public gmr;
@@ -54,11 +54,11 @@ contract Factory721 is NFTokenMetadata, Ownable, IdReplacer {
         );
     }
 
-    function mintV5(string calldata name, string calldata image) external {
+    function mintV5(string calldata tokenName, string calldata image) external {
         string memory _uri = string(
             abi.encodePacked(
                 'data:application/json;utf8,{"name": "',
-                name,
+                tokenName,
                 '", "image": "',
                 image,
                 '"}'

@@ -10,30 +10,30 @@ async function deploy () {
     const testGoodMetadataRepository = await TestGoodMetadataRepository.deploy(test.address, 3);
     await testGoodMetadataRepository.deployed();
 
-    const BuilderERC721 = await ethers.getContractFactory('BuilderERC721');
-    const builderERC721 = await BuilderERC721.deploy();
-    await builderERC721.deployed();
+    const FactoryERC721 = await ethers.getContractFactory('FactoryERC721');
+    const factoryERC721 = await FactoryERC721.deploy();
+    await factoryERC721.deployed();
 
-    const BuilderERC1155 = await ethers.getContractFactory('BuilderERC1155');
-    const builderERC1155 = await BuilderERC1155.deploy();
-    await builderERC1155.deployed();
+    const FactoryERC1155 = await ethers.getContractFactory('FactoryERC1155');
+    const factoryERC1155 = await FactoryERC1155.deploy();
+    await factoryERC1155.deployed();
 
-    const BuilderCondensed = await ethers.getContractFactory('BuilderCondensed');
-    const builderCondensed = await BuilderCondensed.deploy();
-    await builderCondensed.deployed();
+    const FactoryCondensed = await ethers.getContractFactory('FactoryCondensed');
+    const factoryCondensed = await FactoryCondensed.deploy();
+    await factoryCondensed.deployed();
 
     const Facade = await ethers.getContractFactory('Facade');
     const facade = await Facade.deploy(
         testGoodMetadataRepository.address,
         [
-            builderERC721.address,
-            builderERC1155.address,
-            builderCondensed.address,
+            factoryERC721.address,
+            factoryERC1155.address,
+            factoryCondensed.address,
         ],
     );
     await facade.deployed();
 
-    return [facade, BuilderERC721, builderERC1155, builderCondensed, testGoodMetadataRepository];
+    return [facade, factoryERC721, factoryERC1155, factoryCondensed, testGoodMetadataRepository];
 }
 
 it('create*', async function () {
@@ -51,8 +51,8 @@ it('create*', async function () {
 });
 
 it('Facade.multiCreate', async () => {
-    const BuilderERC721 = await ethers.getContractFactory('BuilderERC721');
-    const Factory721 = await ethers.getContractFactory('Factory721');
+    const FactoryERC721 = await ethers.getContractFactory('FactoryERC721');
+    const ERC721 = await ethers.getContractFactory('CustomERC721');
 
     const [facade] = await deploy();
     const tx = await facade.multiCreate('test', 2, 4);
@@ -61,29 +61,29 @@ it('Facade.multiCreate', async () => {
 
     let log;
 
-    log = BuilderERC721.interface.parseLog(receipt.events[0]);
+    log = FactoryERC721.interface.parseLog(receipt.events[0]);
     expect(log.name).to.be.eq('Deployed');
 
     const first = log.args.addr;
-    const firstFactory = Factory721.attach(first);
+    const firstFactory = ERC721.attach(first);
     expect(await firstFactory.name()).to.be.eq('test 1');
 
     for (let i = 1; i < 5; i++) {
         expect(receipt.events[i].address).to.be.eq(first);
-        log = Factory721.interface.parseLog(receipt.events[i]);
+        log = ERC721.interface.parseLog(receipt.events[i]);
         expect(log.args._from).to.be.eq(ethers.constants.AddressZero);
         expect(log.args._to).to.be.eq(tx.from);
     }
 
-    log = BuilderERC721.interface.parseLog(receipt.events[5]);
+    log = FactoryERC721.interface.parseLog(receipt.events[5]);
     expect(log.name).to.be.eq('Deployed');
 
     const second = log.args.addr;
-    const secondFactory = Factory721.attach(second);
+    const secondFactory = ERC721.attach(second);
     expect(await secondFactory.name()).to.be.eq('test 2');
     for (let i = 6; i < 10; i++) {
         expect(receipt.events[i].address).to.be.eq(second);
-        log = Factory721.interface.parseLog(receipt.events[i]);
+        log = ERC721.interface.parseLog(receipt.events[i]);
         expect(log.args._from).to.be.eq(ethers.constants.AddressZero);
         expect(log.args._to).to.be.eq(tx.from);
     }

@@ -11,8 +11,8 @@ async function ifNotDeployed (alias, callback) {
         verify.deployed(contract.address);
         console.log(`${alias} deployed to:`, deployed[alias]);
     }
-    const factory = await hre.ethers.getContractFactory(alias);
-    return factory.attach(deployed[alias]);
+    const Factory = await hre.ethers.getContractFactory(alias);
+    return Factory.attach(deployed[alias]);
 }
 
 function deriveAddress (receipt) {
@@ -76,26 +76,26 @@ async function main() {
     });
     verify.setArgs(gmr.address);
 
-    const builderERC721 = await ifNotDeployed('BuilderERC721', async () => {
-        const FactoryBuilder1 = await hre.ethers.getContractFactory('BuilderERC721');
+    const factoryERC721 = await ifNotDeployed('FactoryERC721', async () => {
+        const FactoryBuilder1 = await hre.ethers.getContractFactory('FactoryERC721');
         const factoryBuilder1 = await FactoryBuilder1.deploy();
         return factoryBuilder1.deployed();
     });
-    verify.setArgs(builderERC721.address);
+    verify.setArgs(factoryERC721.address);
 
-    const builderERC1155 = await ifNotDeployed('BuilderERC1155', async () => {
-        const BuilderERC1155 = await hre.ethers.getContractFactory('BuilderERC1155');
-        const builderERC1155 = await BuilderERC1155.deploy();
-        return builderERC1155.deployed();
+    const factoryERC1155 = await ifNotDeployed('FactoryERC1155', async () => {
+        const FactoryERC1155 = await hre.ethers.getContractFactory('FactoryERC1155');
+        const factoryERC1155 = await FactoryERC1155.deploy();
+        return factoryERC1155.deployed();
     });
-    verify.setArgs(builderERC1155.address);
+    verify.setArgs(factoryERC1155.address);
 
-    const builderCondensed = await ifNotDeployed('BuilderCondensed', async () => {
-        const BuilderCondensed = await hre.ethers.getContractFactory('BuilderCondensed');
-        const builderCondensed = await BuilderCondensed.deploy();
-        return builderCondensed.deployed();
+    const factoryCondensed = await ifNotDeployed('FactoryCondensed', async () => {
+        const FactoryCondensed = await hre.ethers.getContractFactory('FactoryCondensed');
+        const factoryCondensed = await FactoryCondensed.deploy();
+        return factoryCondensed.deployed();
     });
-    verify.setArgs(builderCondensed.address);
+    verify.setArgs(factoryCondensed.address);
 
     const factoryBuilder5 = await ifNotDeployed('DeployedMigration', async () => {
         const FactoryBuilder5 = await hre.ethers.getContractFactory('DeployedMigration');
@@ -105,9 +105,9 @@ async function main() {
     verify.setArgs(factoryBuilder5.address);
 
     const builders = [
-        builderERC721.address,
-        builderERC1155.address,
-        builderCondensed.address,
+        factoryERC721.address,
+        factoryERC1155.address,
+        factoryCondensed.address,
     ];
     const facade = await ifNotDeployed('Facade', async () => {
         const Facade = await hre.ethers.getContractFactory('Facade');
@@ -118,13 +118,13 @@ async function main() {
     });
     verify.setArgs(facade.address, gmr.address, builders);
 
-    const address721 = await ifNotDeployed('Factory721', async () => {
+    const address721 = await ifNotDeployed('CustomERC721', async () => {
         const receipt721 = await (await facade.create721('test721')).wait();
         return {address: deriveAddress(receipt721)};
     });
     verify.setArgs(address721.address, gmr.address, 'test721');
 
-    const address1155 = await ifNotDeployed('Factory1155', async () => {
+    const address1155 = await ifNotDeployed('CustomERC1155', async () => {
         const receipt1155 = await (await facade.create1155('test1155')).wait();
         return {address: deriveAddress(receipt1155)};
     });
@@ -143,9 +143,23 @@ async function main() {
     });
     verify.setArgs(customOwnable.address);
 
+    const customResolver = await ifNotDeployed('CustomResolver', async () => {
+        const CustomResolver = await hre.ethers.getContractFactory('CustomResolver');
+        const customResolver = await CustomResolver.deploy();
+        return customResolver.deployed();
+    });
+    verify.setArgs(customResolver.address);
+
+    const printable = await ifNotDeployed('Printable', async () => {
+        const Printable = await hre.ethers.getContractFactory('Printable');
+        const printable = await Printable.deploy();
+        return printable.deployed();
+    });
+    verify.setArgs(printable.address);
+
     verify.print();
     fs.writeFileSync(
-        `./deployed.json`,
+        `./scripts/deployed.json`,
         JSON.stringify(deployed, null, 2) + '\n',
         {flag: 'w'}
     );

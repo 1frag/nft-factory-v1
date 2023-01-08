@@ -6,15 +6,15 @@ async function deploy () {
     const goodMetadataRepository = await GoodMetadataRepository.deploy();
     await goodMetadataRepository.deployed();
 
-    const Factory = await ethers.getContractFactory('Factory1155');
-    const factory = await Factory.deploy(goodMetadataRepository.address, 'Test');
-    await factory.deployed();
-    return [factory, goodMetadataRepository];
+    const ERC1155 = await ethers.getContractFactory('CustomERC1155');
+    const erc1155 = await ERC1155.deploy(goodMetadataRepository.address, 'Test');
+    await erc1155.deployed();
+    return [erc1155, goodMetadataRepository];
 }
 
 it('get GoodMetadataRepository address', async function () {
-    const [factory, gmr] = await deploy();
-    expect(await factory.gmr()).to.be.eq(gmr.address);
+    const [erc1155, gmr] = await deploy();
+    expect(await erc1155.gmr()).to.be.eq(gmr.address);
 });
 
 ['TestERC721', 'TestERC1155'].forEach(testName => it(`Test mint v4 ${testName}`, async function () {
@@ -22,14 +22,14 @@ it('get GoodMetadataRepository address', async function () {
     const test = await Test.deploy();
     await test.deployed();
 
-    const [factory] = await deploy();
+    const [erc1155] = await deploy();
 
-    const tx = await (await factory.mintV4(test.address, '5')).wait();
+    const tx = await (await erc1155.mintV4(test.address, '5')).wait();
     expect(tx.events.length).to.be.eq(1);
     expect(tx.events[0].args.from).to.be.eq(ethers.constants.AddressZero);
     expect(tx.events[0].args.to).to.be.eq(tx.from);
 
-    const metadata = await factory.uri(1);
+    const metadata = await erc1155.uri(1);
     expect(metadata).to.be.eq('<some-data>');
 }));
 
@@ -48,23 +48,23 @@ it('get GoodMetadataRepository address', async function () {
     ({tokenId, baseUri, expected}) => it(
         `Test replaceIdInString(${baseUri}, ${tokenId})`,
         async function () {
-            const [factory] = await deploy();
+            const [erc1155] = await deploy();
 
-            const value = await factory.replaceIdInString(baseUri, tokenId);
+            const value = await erc1155.replaceIdInString(baseUri, tokenId);
             expect(value).to.be.eq(expected);
         }
     )
 );
 
 it('mintV5', async function () {
-    const [factory] = await deploy();
+    const [erc1155] = await deploy();
 
-    const tx = await (await factory.mintV5('name', 'https://random.imagecdn.app/200/200')).wait();
+    const tx = await (await erc1155.mintV5('name', 'https://random.imagecdn.app/200/200')).wait();
     expect(tx.events.length).to.be.eq(1);
     expect(tx.events[0].args.from).to.be.eq(ethers.constants.AddressZero);
     expect(tx.events[0].args.to).to.be.eq(tx.from);
 
-    const uri = await factory.uri(1);
+    const uri = await erc1155.uri(1);
     expect(uri).to.be.eq(
         'data:application/json;utf8,{"name": "name", "image": "https://random.imagecdn.app/200/200"}'
     );
@@ -75,22 +75,22 @@ it('mintV6', async function () {
     const test = await Test.deploy();
     await test.deployed();
 
-    const [factory] = await deploy();
+    const [erc1155] = await deploy();
 
-    const tx = await (await factory.mintV6(test.address, 2, 7)).wait();
+    const tx = await (await erc1155.mintV6(test.address, 2, 7)).wait();
     expect(tx.events.length).to.be.eq(6);
 });
 
 it('refresh', async function () {
-    const [factory] = await deploy();
+    const [erc1155] = await deploy();
 
-    const tx1 = await (await factory.mintV1(
+    const tx1 = await (await erc1155.mintV1(
         '0x0000000000000000000000000000000000000123',
         ''
     )).wait();
     expect(tx1.events.length).to.be.eq(1);
 
-    const tx2 = await (await factory.refresh(1)).wait();
+    const tx2 = await (await erc1155.refresh(1)).wait();
     expect(tx2.events.length).to.be.eq(2);
     expect(tx2.events[0].args.to).to.be.eq(tx2.events[1].args.from);
     expect(tx2.events[1].args.to).to.be.eq(tx2.events[0].args.from);
@@ -98,16 +98,16 @@ it('refresh', async function () {
 });
 
 it('refreshAll', async function () {
-    const [factory] = await deploy();
+    const [erc1155] = await deploy();
 
     for (let i = 0; i < 4; i++) {
-        const tx1 = await (await factory.mintV1(
+        const tx1 = await (await erc1155.mintV1(
             '0x0000000000000000000000000000000000000123',
             ''
         )).wait();
         expect(tx1.events.length).to.be.eq(1);
     }
 
-    const tx2 = await (await factory.refreshAll()).wait();
+    const tx2 = await (await erc1155.refreshAll()).wait();
     expect(tx2.events.length).to.be.eq(8);
 });

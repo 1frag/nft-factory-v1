@@ -13,7 +13,7 @@ contract IdReplacer {
     function getUriFromAnotherCollection(
         address contractAddress,
         uint tokenId
-    ) external returns (string memory) {
+    ) external view returns (string memory) {
         try IERC721Metadata(contractAddress).tokenURI(tokenId) returns (
             string memory result
         ) {
@@ -29,13 +29,13 @@ contract IdReplacer {
     function replaceIdInString(
         string memory _uri,
         uint tokenId
-    ) external view returns (string memory) {
+    ) external pure returns (string memory) {
         bytes memory uri = bytes(_uri);
         for (uint i; i <= uri.length - SEARCH_LENGTH; i++) {
             uint j;
             for (; j < SEARCH_LENGTH && uri[i + j] == SEARCH[j]; j++) {}
             if (j == SEARCH_LENGTH) {
-                bytes memory formatted = this.formatTokenId(tokenId);
+                bytes memory formatted = formatTokenId(tokenId);
                 bytes memory tempBytes = new bytes(
                     uri.length - 4 + formatted.length
                 );
@@ -54,7 +54,7 @@ contract IdReplacer {
         return string(uri);
     }
 
-    function formatTokenId(uint tokenId) external view returns (bytes memory) {
+    function formatTokenId(uint tokenId) internal pure returns (bytes memory) {
         bytes memory buffer = new bytes(64);
         for (uint256 i = 63; i > 0; --i) {
             buffer[i] = _HEX_SYMBOLS[tokenId & 0xf];

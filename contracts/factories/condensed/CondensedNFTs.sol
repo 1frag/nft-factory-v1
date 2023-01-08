@@ -12,9 +12,9 @@ contract CondensedNFTs is ERC1155(""), Ownable, IdReplacer {
 
     IGoodMetadataRepository public gmr;
 
-    constructor(address goodMetadataRepositoryAddress, string memory _nftName) {
-        nftName = _nftName;
-        nftSymbol = "Symbol";
+    constructor(address goodMetadataRepositoryAddress, string memory _name) {
+        name = _name;
+        symbol = "Symbol";
         gmr = IGoodMetadataRepository(goodMetadataRepositoryAddress);
         owner = tx.origin;
     }
@@ -45,19 +45,15 @@ contract CondensedNFTs is ERC1155(""), Ownable, IdReplacer {
     }
 
     // named
-    string internal nftName;
-    string internal nftSymbol;
+    string public name;
+    string public symbol;
 
     function renameContract(
-        string calldata name,
-        string calldata symbol
+        string calldata _name,
+        string calldata _symbol
     ) external {
-        nftName = name;
-        nftSymbol = symbol;
-    }
-
-    function name() external view returns (string memory _name) {
-        _name = nftName;
+        name = _name;
+        symbol = _symbol;
     }
 
     // marketplace

@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 import {CondensedNFTs} from "./CondensedNFTs.sol";
 import {Random} from "../../utils/Random.sol";
 
-contract BuilderCondensed is Random {
+contract FactoryCondensed is Random {
     event Deployed(address addr);
 
     function createCondensed(
