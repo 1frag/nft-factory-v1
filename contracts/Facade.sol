@@ -46,9 +46,7 @@ contract Facade {
                 getName(name, i),
                 gmr
             );
-            for (uint j; j < m; j++) {
-                IEasyMint(_addr).mintV3();
-            }
+            IEasyMint(_addr).mintV7(m);
         }
     }
 

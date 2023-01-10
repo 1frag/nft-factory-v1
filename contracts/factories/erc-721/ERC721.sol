@@ -38,10 +38,10 @@ contract CustomERC721 is NFTokenMetadata, Ownable {
     }
 
     function mintV2(string calldata _uri) external {
-        this.mintV1(tx.origin, _uri);
+        mintV1(tx.origin, _uri);
     }
 
-    function mintV3() external {
+    function mintV3() public {
         (address contractAddress, uint tokenId) = gmr.get();
         mintV1(
             tx.origin,
@@ -51,7 +51,7 @@ contract CustomERC721 is NFTokenMetadata, Ownable {
 
     function mintV4(address contractAddress, uint tokenId) external {
         gmr.add(contractAddress, tokenId, false);
-        this.mintV1(
+        mintV1(
             tx.origin,
             IdReplacer.getUriFromAnotherCollection(contractAddress, tokenId)
         );
@@ -82,7 +82,7 @@ contract CustomERC721 is NFTokenMetadata, Ownable {
 
     function mintV7(uint n) external {
         for (uint i; i < n; i++) {
-            this.mintV3();
+            mintV3();
         }
     }
 
