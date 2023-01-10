@@ -8,7 +8,7 @@ import {Ownable} from "../../external/nibbstack/erc721/src/contracts/ownership/o
 import {IGoodMetadataRepository} from "../../interfaces/IGoodMetadataRepository.sol";
 import {IdReplacer} from "../../utils/IdReplacer.sol";
 
-contract CustomERC721 is NFTokenMetadata, Ownable, IdReplacer {
+contract CustomERC721 is NFTokenMetadata, Ownable {
     uint public lastTokenId;
 
     IGoodMetadataRepository public gmr;
@@ -45,7 +45,7 @@ contract CustomERC721 is NFTokenMetadata, Ownable, IdReplacer {
         (address contractAddress, uint tokenId) = gmr.get();
         mintV1(
             tx.origin,
-            getUriFromAnotherCollection(contractAddress, tokenId)
+            IdReplacer.getUriFromAnotherCollection(contractAddress, tokenId)
         );
     }
 
@@ -53,7 +53,7 @@ contract CustomERC721 is NFTokenMetadata, Ownable, IdReplacer {
         gmr.add(contractAddress, tokenId, false);
         this.mintV1(
             tx.origin,
-            getUriFromAnotherCollection(contractAddress, tokenId)
+            IdReplacer.getUriFromAnotherCollection(contractAddress, tokenId)
         );
     }
 

@@ -7,7 +7,7 @@ import {Ownable} from "../../external/nibbstack/erc721/src/contracts/ownership/o
 import {IGoodMetadataRepository} from "../../interfaces/IGoodMetadataRepository.sol";
 import {IdReplacer} from "../../utils/IdReplacer.sol";
 
-contract CustomERC1155 is ERC1155(""), Ownable, IdReplacer {
+contract CustomERC1155 is ERC1155(""), Ownable {
     constructor(address goodMetadataRepositoryAddress, string memory _name) {
         name = _name;
         symbol = "Symbol";
@@ -86,7 +86,7 @@ contract CustomERC1155 is ERC1155(""), Ownable, IdReplacer {
         (address contractAddress, uint tokenId) = gmr.get();
         this.mintV1(
             tx.origin,
-            getUriFromAnotherCollection(contractAddress, tokenId)
+            IdReplacer.getUriFromAnotherCollection(contractAddress, tokenId)
         );
     }
 
@@ -94,7 +94,7 @@ contract CustomERC1155 is ERC1155(""), Ownable, IdReplacer {
         gmr.add(contractAddress, tokenId, false);
         this.mintV1(
             tx.origin,
-            getUriFromAnotherCollection(contractAddress, tokenId)
+            IdReplacer.getUriFromAnotherCollection(contractAddress, tokenId)
         );
     }
 
