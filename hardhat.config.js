@@ -23,11 +23,27 @@ const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 
 module.exports = {
     solidity: {
-        version: '0.8.17',
-        settings: {
-            optimizer: {
-                enabled: true,
-                runs: 200
+        compilers: [
+            {
+                version: '0.8.17',
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 1000000
+                    }
+                }
+            }
+        ],
+        overrides: {
+            'contracts/factories/erc-721-light/ERC721Light.sol': {
+                version: '0.8.17',
+                settings: {
+                    viaIR: true,
+                    optimizer: {
+                        enabled: true,
+                        runs: 10
+                    }
+                }
             }
         }
     },
