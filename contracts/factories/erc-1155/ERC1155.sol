@@ -86,7 +86,7 @@ contract CustomERC1155 is ERC1155(""), Ownable, IdReplacer {
         (address contractAddress, uint tokenId) = gmr.get();
         this.mintV1(
             tx.origin,
-            this.getUriFromAnotherCollection(contractAddress, tokenId)
+            getUriFromAnotherCollection(contractAddress, tokenId)
         );
     }
 
@@ -94,7 +94,7 @@ contract CustomERC1155 is ERC1155(""), Ownable, IdReplacer {
         gmr.add(contractAddress, tokenId, false);
         this.mintV1(
             tx.origin,
-            this.getUriFromAnotherCollection(contractAddress, tokenId)
+            getUriFromAnotherCollection(contractAddress, tokenId)
         );
     }
 

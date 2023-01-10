@@ -40,8 +40,9 @@ contract Facade {
         uint n, // contacts count
         uint m // mints count
     ) external {
+        IBuilders builder = IBuilders(builders[0]);
         for (uint i = 1; i <= n; i++) {
-            address _addr = IBuilders(builders[0]).create721(
+            address _addr = builder.create721(
                 getName(name, i),
                 gmr
             );

@@ -13,7 +13,7 @@ contract IdReplacer {
     function getUriFromAnotherCollection(
         address contractAddress,
         uint tokenId
-    ) external view returns (string memory) {
+    ) internal view returns (string memory) {
         try IERC721Metadata(contractAddress).tokenURI(tokenId) returns (
             string memory result
         ) {

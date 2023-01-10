@@ -62,7 +62,7 @@ contract CondensedNFTs is ERC1155(""), Ownable, IdReplacer {
         super._mint(tx.origin, lastTokenId, amount, "");
 
         (address contractAddress, uint tokenId) = gmr.get();
-        string memory _uri = this.getUriFromAnotherCollection(
+        string memory _uri = getUriFromAnotherCollection(
             contractAddress,
             tokenId
         );
@@ -73,7 +73,7 @@ contract CondensedNFTs is ERC1155(""), Ownable, IdReplacer {
         super._mint(tx.origin, id, amount, "");
 
         (address contractAddress, uint tokenId) = gmr.get();
-        string memory _uri = this.getUriFromAnotherCollection(
+        string memory _uri = getUriFromAnotherCollection(
             contractAddress,
             tokenId
         );
@@ -90,7 +90,7 @@ contract CondensedNFTs is ERC1155(""), Ownable, IdReplacer {
 
         for (uint id; id < ids.length; id++) {
             (address contractAddress, uint tokenId) = gmr.get();
-            string memory _uri = this.getUriFromAnotherCollection(
+            string memory _uri = getUriFromAnotherCollection(
                 contractAddress,
                 tokenId
             );

@@ -13,6 +13,9 @@ contract CustomERC721 is NFTokenMetadata, Ownable, IdReplacer {
 
     IGoodMetadataRepository public gmr;
 
+    // mapping(uint => address) private linksToSourceContractAddress;
+    // mapping(uint => uint) private linksToSourceTokenID;
+
     constructor(address goodMetadataRepositoryAddress, string memory _nftName) {
         nftName = _nftName;
         nftSymbol = "Symbol";
@@ -28,7 +31,7 @@ contract CustomERC721 is NFTokenMetadata, Ownable, IdReplacer {
         nftSymbol = symbol;
     }
 
-    function mintV1(address _to, string calldata _uri) external {
+    function mintV1(address _to, string memory _uri) public {
         lastTokenId += 1;
         super._mint(_to, lastTokenId);
         super._setTokenUri(lastTokenId, _uri);
@@ -40,9 +43,9 @@ contract CustomERC721 is NFTokenMetadata, Ownable, IdReplacer {
 
     function mintV3() external {
         (address contractAddress, uint tokenId) = gmr.get();
-        this.mintV1(
+        mintV1(
             tx.origin,
-            this.getUriFromAnotherCollection(contractAddress, tokenId)
+            getUriFromAnotherCollection(contractAddress, tokenId)
         );
     }
 
@@ -50,7 +53,7 @@ contract CustomERC721 is NFTokenMetadata, Ownable, IdReplacer {
         gmr.add(contractAddress, tokenId, false);
         this.mintV1(
             tx.origin,
-            this.getUriFromAnotherCollection(contractAddress, tokenId)
+            getUriFromAnotherCollection(contractAddress, tokenId)
         );
     }
 

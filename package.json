@@ -18,6 +18,7 @@
     "dotenv": "^16.0.1",
     "elliptic-curve-solidity": "^0.2.4",
     "hardhat-contract-sizer": "^2.6.1",
+    "hardhat-gas-reporter": "^1.0.9",
     "solc": "^0.8.15",
     "truffle": "^5.7.1"
   },

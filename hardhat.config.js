@@ -2,6 +2,7 @@ require('dotenv').config();
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-etherscan");
 require('hardhat-contract-sizer');
+require('hardhat-gas-reporter');
 const ethers = require('ethers');
 
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
@@ -46,5 +47,9 @@ module.exports = {
     },
     etherscan: {
         apiKey: ETHERSCAN_API_KEY
+    },
+    gasReporter: {
+        gasPrice: 21,
+        enabled: true
     }
 };
