@@ -95,8 +95,6 @@ contract GoodMetadataRepository {
                 keccak256(
                     abi.encodePacked(
                         block.number,
-                        msg.sender,
-                        tx.gasprice,
                         _rnd
                     )
                 )

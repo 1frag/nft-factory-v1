@@ -9,12 +9,9 @@ import {IGoodMetadataRepository} from "../../interfaces/IGoodMetadataRepository.
 import {IdReplacer} from "../../utils/IdReplacer.sol";
 
 contract CustomERC721 is NFTokenMetadata, Ownable {
-    uint public lastTokenId;
+    uint internal lastTokenId;
 
-    IGoodMetadataRepository public gmr;
-
-    // mapping(uint => address) private linksToSourceContractAddress;
-    // mapping(uint => uint) private linksToSourceTokenID;
+    IGoodMetadataRepository internal gmr;
 
     constructor(address goodMetadataRepositoryAddress, string memory _nftName) {
         nftName = _nftName;
@@ -49,8 +46,7 @@ contract CustomERC721 is NFTokenMetadata, Ownable {
         );
     }
 
-    function mintV4(address contractAddress, uint tokenId) external {
-        gmr.add(contractAddress, tokenId, false);
+    function mintV4(address contractAddress, uint tokenId) public {
         mintV1(
             tx.origin,
             IdReplacer.getUriFromAnotherCollection(contractAddress, tokenId)
@@ -67,7 +63,7 @@ contract CustomERC721 is NFTokenMetadata, Ownable {
                 '"}'
             )
         );
-        this.mintV1(tx.origin, _uri);
+        mintV1(tx.origin, _uri);
     }
 
     function mintV6(
@@ -76,7 +72,7 @@ contract CustomERC721 is NFTokenMetadata, Ownable {
         uint toTokenId
     ) external {
         for (uint tokenId = fromTokenId; tokenId <= toTokenId; tokenId++) {
-            this.mintV4(contractAddress, tokenId);
+            mintV4(contractAddress, tokenId);
         }
     }
 
@@ -86,7 +82,7 @@ contract CustomERC721 is NFTokenMetadata, Ownable {
         }
     }
 
-    function refresh(uint tokenId) external {
+    function refresh(uint tokenId) public {
         address intermediate = address(uint160(rnd()));
         address owner = idToOwner[tokenId];
         super._transfer(intermediate, tokenId);
@@ -95,7 +91,7 @@ contract CustomERC721 is NFTokenMetadata, Ownable {
 
     function refreshAll() external {
         for (uint tokenId = 1; tokenId <= lastTokenId; tokenId++) {
-            this.refresh(tokenId);
+            refresh(tokenId);
         }
     }
 
@@ -105,8 +101,6 @@ contract CustomERC721 is NFTokenMetadata, Ownable {
                 keccak256(
                     abi.encodePacked(
                         block.number,
-                        msg.sender,
-                        tx.gasprice,
                         lastTokenId
                     )
                 )

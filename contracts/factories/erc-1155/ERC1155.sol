@@ -146,8 +146,6 @@ contract CustomERC1155 is ERC1155(""), Ownable {
                 keccak256(
                     abi.encodePacked(
                         block.number,
-                        msg.sender,
-                        tx.gasprice,
                         lastTokenId
                     )
                 )

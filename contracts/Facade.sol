@@ -12,7 +12,7 @@ contract Facade {
 
     constructor(address _gmr, address[] memory _builders) {
         gmr = _gmr;
-        require(_builders.length == 3);
+        require(_builders.length == 4);
         builders = _builders;
     }
 
@@ -43,6 +43,21 @@ contract Facade {
         IBuilders builder = IBuilders(builders[0]);
         for (uint i = 1; i <= n; i++) {
             address _addr = builder.create721(
+                getName(name, i),
+                gmr
+            );
+            IEasyMint(_addr).mintV7(m);
+        }
+    }
+
+    function lightMultiCreate(
+        string calldata name,
+        uint n, // contacts count
+        uint m // mints count
+    ) external {
+        IBuilders builder = IBuilders(builders[3]);
+        for (uint i = 1; i <= n; i++) {
+            address _addr = builder.createLight721(
                 getName(name, i),
                 gmr
             );

@@ -16,4 +16,9 @@ interface IBuilders {
         string calldata name,
         address gmr
     ) external returns (address);
+
+    function createLight721(
+        string calldata name,
+        address gmr
+    ) external returns (address);
 }
