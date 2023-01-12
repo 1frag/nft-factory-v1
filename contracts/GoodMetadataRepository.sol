@@ -81,6 +81,15 @@ contract GoodMetadataRepository {
         tokenIds.pop();
     }
 
+    function getSpecifyingRnd(
+        uint _rndValue
+    ) external view returns (address, uint) {
+        uint rndValue = _rndValue % contractAddresses.length;
+        address contractAddress = contractAddresses[rndValue];
+        uint tokenId = tokenIds[rndValue];
+        return (contractAddress, tokenId);
+    }
+
     function get() external returns (address, uint) {
         uint rndValue = rnd() % contractAddresses.length;
         address contractAddress = contractAddresses[rndValue];
@@ -90,15 +99,7 @@ contract GoodMetadataRepository {
 
     function rnd() internal returns (uint) {
         _rnd += 1;
-        return
-            uint(
-                keccak256(
-                    abi.encodePacked(
-                        block.number,
-                        _rnd
-                    )
-                )
-            );
+        return uint(keccak256(abi.encodePacked(block.number, _rnd)));
     }
 
     function hashState() external view returns (uint) {

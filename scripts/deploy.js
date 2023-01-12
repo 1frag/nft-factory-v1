@@ -2,6 +2,7 @@ const fs = require('fs');
 const hre = require("hardhat");
 
 const deployed = require('./deployed.json');
+const {ethers} = require("hardhat");
 
 async function ifNotDeployed (alias, callback) {
     if (!deployed[alias]) {
@@ -97,17 +98,28 @@ async function main() {
     });
     verify.setArgs(factoryCondensed.address);
 
-    const factoryBuilder5 = await ifNotDeployed('DeployedMigration', async () => {
-        const FactoryBuilder5 = await hre.ethers.getContractFactory('DeployedMigration');
-        const factoryBuilder5 = await FactoryBuilder5.deploy();
-        return factoryBuilder5.deployed();
+    const factoryLightERC721 = await ifNotDeployed('FactoryLightERC721', async () => {
+        const FactoryLightERC721 = await ethers.getContractFactory('FactoryLightERC721');
+        const factoryLightERC721 = await FactoryLightERC721.deploy();
+        await factoryLightERC721.deployed();
+        const ERC721Light = await ethers.getContractFactory('ERC721Light');
+        await factoryLightERC721.setCreationCode(ERC721Light.bytecode);
+        return factoryLightERC721.deployed();
     });
-    verify.setArgs(factoryBuilder5.address);
+    verify.setArgs(factoryLightERC721.address);
+
+    const deployedMigration = await ifNotDeployed('DeployedMigration', async () => {
+        const DeployedMigration = await hre.ethers.getContractFactory('DeployedMigration');
+        const deployedMigration = await DeployedMigration.deploy();
+        return deployedMigration.deployed();
+    });
+    verify.setArgs(deployedMigration.address);
 
     const builders = [
         factoryERC721.address,
         factoryERC1155.address,
         factoryCondensed.address,
+        factoryLightERC721.address,
     ];
     const facade = await ifNotDeployed('Facade', async () => {
         const Facade = await hre.ethers.getContractFactory('Facade');
@@ -135,6 +147,13 @@ async function main() {
         return {address: deriveAddress(receiptCondensed)};
     });
     verify.setArgs(addressCondensed.address, gmr.address, 'testCondensed');
+
+    const erc721Light = await ifNotDeployed('ERC721Light', async () => {
+        const ERC721Light = await hre.ethers.getContractFactory('ERC721Light');
+        const erc721Light = await ERC721Light.deploy(gmr.address, 'test721Light1');
+        return erc721Light.deployed();
+    });
+    verify.setArgs(erc721Light.address, gmr.address, 'test721Light1');
 
     const customOwnable = await ifNotDeployed('CustomOwnable', async () => {
         const CustomOwnable = await hre.ethers.getContractFactory('CustomOwnable');

@@ -16,7 +16,7 @@ contract FactoryLightERC721 is Random {
         string calldata name,
         address gmr
     ) internal view returns (bytes memory) {
-        return abi.encodePacked(_creationCode, abi.encode(gmr), abi.encode(name));
+        return abi.encodePacked(_creationCode, abi.encode(gmr, name));
     }
 
     function createLight721(
@@ -30,7 +30,10 @@ contract FactoryLightERC721 is Random {
         return _addr;
     }
 
-    function deploy(bytes memory bytecode, uint _salt) internal returns (address) {
+    function deploy(
+        bytes memory bytecode,
+        uint _salt
+    ) internal returns (address) {
         address addr;
 
         assembly {

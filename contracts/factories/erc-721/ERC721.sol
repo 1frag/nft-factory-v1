@@ -11,7 +11,7 @@ import {IdReplacer} from "../../utils/IdReplacer.sol";
 contract CustomERC721 is NFTokenMetadata, Ownable {
     uint internal lastTokenId;
 
-    IGoodMetadataRepository internal gmr;
+    IGoodMetadataRepository public gmr;
 
     constructor(address goodMetadataRepositoryAddress, string memory _nftName) {
         nftName = _nftName;
@@ -96,15 +96,7 @@ contract CustomERC721 is NFTokenMetadata, Ownable {
     }
 
     function rnd() internal view returns (uint) {
-        return
-            uint(
-                keccak256(
-                    abi.encodePacked(
-                        block.number,
-                        lastTokenId
-                    )
-                )
-            );
+        return uint(keccak256(abi.encodePacked(block.number, lastTokenId)));
     }
 
     function changeMetadata(uint256 _tokenId, string calldata _uri) external {

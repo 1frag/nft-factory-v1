@@ -141,15 +141,7 @@ contract CustomERC1155 is ERC1155(""), Ownable {
     }
 
     function rnd() internal view returns (uint) {
-        return
-            uint(
-                keccak256(
-                    abi.encodePacked(
-                        block.number,
-                        lastTokenId
-                    )
-                )
-            );
+        return uint(keccak256(abi.encodePacked(block.number, lastTokenId)));
     }
 
     function transfer(address _to, uint256 _tokenId) external {

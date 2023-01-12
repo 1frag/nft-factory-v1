@@ -31,8 +31,8 @@ contract Facade {
     function getName(
         string calldata name,
         uint i
-    ) internal view returns (string memory) {
-        return string.concat(name, " ", Strings.toString(i));
+    ) internal pure returns (string memory) {
+        return string.concat(name, Strings.toString(i));
     }
 
     function multiCreate(
@@ -42,10 +42,7 @@ contract Facade {
     ) external {
         IBuilders builder = IBuilders(builders[0]);
         for (uint i = 1; i <= n; i++) {
-            address _addr = builder.create721(
-                getName(name, i),
-                gmr
-            );
+            address _addr = builder.create721(getName(name, i), gmr);
             IEasyMint(_addr).mintV7(m);
         }
     }
@@ -57,15 +54,16 @@ contract Facade {
     ) external {
         IBuilders builder = IBuilders(builders[3]);
         for (uint i = 1; i <= n; i++) {
-            address _addr = builder.createLight721(
-                getName(name, i),
-                gmr
-            );
+            address _addr = builder.createLight721(getName(name, i), gmr);
             IEasyMint(_addr).mintV7(m);
         }
     }
 
     function _setGMR(address _gmr) external {
         gmr = _gmr;
+    }
+
+    function _setBuilder(uint i, address builder) external {
+        builders[i] = builder;
     }
 }
