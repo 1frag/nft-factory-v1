@@ -1,0 +1,1 @@
+const marketplaceDomain = 'merketplace-domain';

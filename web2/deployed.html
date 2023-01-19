@@ -23,6 +23,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"
         integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="./env.js"></script>
 
 <script>
     const {sortBy, map} = _;
@@ -33,6 +34,14 @@
         '0xC9441ac66f20D9531Db922653a1BfEf430b52213',
         '0xA0F115C93762af4473B09A93db99235332245715',
         '0x6F3a6CbefD6dB1E326bCd48f22fA4EBe6cB3f827',
+        '0x3Ee15866477F799c04105A344A78F6571d8cCb85',
+        '0x58b7E86a415dDb72f633F331dAdc72D13A0c8e79',
+        '0x29CA010F2833EA0DEe364eB6202e7808A9d4c4Ae',
+        '0x175ee002175D04C04451847c11519D6749a03FB9',
+        '0x92f9d9D29ba84839B98E539271BAd64C033fF9d9',
+        '0x7d2769ae8e2c7683BfbFe5fbe47C94C8A590F1d4',
+        '0xa49B98fC7b546848145Ebe50878C13bC49fbFFA8',
+        '0x79e1D2125314b1F40A70b4aDc345BcFFDADD8541',
     ];
     const network = 'goerli';
 
@@ -65,7 +74,8 @@
             $('#tbody-1').html($('#tbody-1').html() + `
             <tr>
                 <th scope="row">${ind}</th>
-                <td><a href="https://${network}.etherscan.io/address/${address}#code">${address}</a></td>
+                <td><a href="https://${network}.etherscan.io/address/${address}#code" target="_blank">${address}</a></td>
+                <td><a href="https://${marketplaceDomain}/collections/${address}" target="_blank">🔗</a></td>
                 <td id="tbody1-tr-td1-${ind}"></td>
                 <td id="tbody1-tr-td2-${ind}"></td>
             </tr>
@@ -82,6 +92,14 @@
                     '0x48680f6b2825c2b3f900087266aef8ddff2d25cbc6cc350f56794fe4d30f06cf': 'ERC721',
                     '0x5c96f4a28a310dee7ce2f60f874e278fea6ed23b782df3f6a3ca8551c94cc058': 'ERC1155',
                     '0x51755081a77a6dca2059d668e536a44e32719b865de8701a3e834c7cf9bd975f': 'CondensedNFTs',
+                    '0x18b92fcc7d11b8b35c02ff27e8160298725fdcab5e6e8fff12dd01cb75ca4fe4': 'CondensedNFTs',
+                    '0x5aaff3a9a632980732a646a77e85df8a5675432bf0f47fba76be8724f0c1d117': 'ERC721Light',
+                    '0x88b0000dd861c241a020d9b6ade7c04efe9655110f8a661e77c9355aea59a0ce': 'ERC721Light',
+                    '0x45ca9d22ce968921886646ed002b9a69ed9075d288a80777a43cf98c82ecf453': 'CustomERC1155',
+                    '0xdae87575f344a5e00c7053173e1e91dbc8c0f42da628f2ad8b448e77ccd02138': 'CustomERC721',
+                    '0xbbe6e267246a75b604fc9fe6a984c17b354a389981d293059673fdd31982d053': 'CondensedNFTs',
+                    '0x78c2b6cb5b50047faf823de9a37bb6f3b43372d36af0fef3eb06c971ca36206e': 'Factory1155',
+                    '0xb0cd0eb2a616d9493bbdf4cb9b0cf3013d004ee3d0f91c50a20c5316879589d8': 'Factory721',
                 }[codeHash];
                 $(`#tbody1-tr-td2-${ind}`).html(name);
                 if (!name) {
@@ -99,6 +117,7 @@
     <tr>
         <th scope="col">#</th>
         <th scope="col">Address</th>
+        <th scope="col">Actions</th>
         <th scope="col">Name</th>
         <th scope="col">Type</th>
     </tr>
