@@ -12,7 +12,7 @@ contract Facade {
 
     constructor(address _gmr, address[] memory _builders) {
         gmr = _gmr;
-        require(_builders.length == 4);
+        require(_builders.length == 5);
         builders = _builders;
     }
 
@@ -29,7 +29,7 @@ contract Facade {
     }
 
     function create20(string calldata name, string calldata symbol) external returns (address) {
-        return IBuilders(builders[3]).create20(name, symbol);
+        return IBuilders(builders[4]).create20(name, symbol);
     }
 
     function getName(
