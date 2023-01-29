@@ -9,7 +9,7 @@ contract CustomOwnable is ERC721 {
 
     constructor() ERC721("CustomOwnable", "%%") {}
 
-    function _baseURI() internal view override returns (string memory) {
+    function _baseURI() internal pure override returns (string memory) {
         return
             "https://ipfs.io/ipfs/QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/";
     }

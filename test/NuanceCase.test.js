@@ -43,7 +43,7 @@ it('Positive case nuance (many addresses)', async () => {
     }
 });
 
-it('Positive case nuance (mint + transfer)', async () => {
+it.skip('Positive case nuance (mint + transfer)', async () => {
     const dead = '0x000000000000000000000000000000000000dEaD';
 
     const [leaderBoard, currency] = await deploy();

@@ -18,7 +18,7 @@ contract NuanceLeaderBoard is ERC721 {
         currency = msg.sender;
     }
 
-    function ensureCurrencyContract() internal {
+    function ensureCurrencyContract() internal view {
         require(
             msg.sender == currency,
             "You are not allowed to manage token ownership"
@@ -48,7 +48,7 @@ contract NuanceLeaderBoard is ERC721 {
         address,
         uint256,
         uint256
-    ) internal override {
+    ) internal view override {
         ensureCurrencyContract();
     }
 }
