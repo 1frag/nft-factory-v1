@@ -66,6 +66,6 @@ module.exports = {
     },
     gasReporter: {
         gasPrice: 21,
-        enabled: true
+        enabled: !!process.env.REPORT_GAS
     }
 };
