@@ -22,6 +22,12 @@ async function deploy () {
     const factoryCondensed = await FactoryCondensed.deploy();
     await factoryCondensed.deployed();
 
+    const FactoryLightERC721 = await ethers.getContractFactory('FactoryLightERC721');
+    const factoryLightERC721 = await FactoryLightERC721.deploy();
+    await factoryLightERC721.deployed();
+    const ERC721Light = await ethers.getContractFactory('ERC721Light');
+    await factoryLightERC721.setCreationCode(ERC721Light.bytecode);
+
     const Facade = await ethers.getContractFactory('Facade');
     const facade = await Facade.deploy(
         testGoodMetadataRepository.address,
@@ -29,11 +35,12 @@ async function deploy () {
             factoryERC721.address,
             factoryERC1155.address,
             factoryCondensed.address,
+            factoryLightERC721.address,
         ],
     );
     await facade.deployed();
 
-    return [facade, factoryERC721, factoryERC1155, factoryCondensed, testGoodMetadataRepository];
+    return [facade, factoryERC721, factoryERC1155, factoryCondensed, factoryLightERC721, testGoodMetadataRepository];
 }
 
 it('create*', async function () {
@@ -55,7 +62,7 @@ it('Facade.multiCreate', async () => {
     const ERC721 = await ethers.getContractFactory('CustomERC721');
 
     const [facade] = await deploy();
-    const tx = await facade.multiCreate('test', 2, 4);
+    const tx = await facade.multiCreate('test ', 2, 4);
     const receipt = await tx.wait();
     expect(receipt.events.length).to.be.eq(10);
 
@@ -87,4 +94,20 @@ it('Facade.multiCreate', async () => {
         expect(log.args._from).to.be.eq(ethers.constants.AddressZero);
         expect(log.args._to).to.be.eq(tx.from);
     }
+});
+
+it('Facade.multiCreate gas cost', async () => {
+    const [facade] = await deploy();
+    const gas = await facade.estimateGas.lightMultiCreate('test ', 10, 10);
+    expect(gas).to.be.eq(14645478);
+
+    // show in gas reporter
+    const tx = await facade.lightMultiCreate('test ', 10, 10);
+    const r = await tx.wait();
+
+    const erc721Light = await ethers.getContractAt(
+        'ERC721Light',
+        r.events[0].data.replace('0x000000000000000000000000', '0x'),
+    );
+    expect(await erc721Light.name()).to.be.eq('test 1');
 });

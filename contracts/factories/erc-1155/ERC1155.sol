@@ -7,7 +7,7 @@ import {Ownable} from "../../external/nibbstack/erc721/src/contracts/ownership/o
 import {IGoodMetadataRepository} from "../../interfaces/IGoodMetadataRepository.sol";
 import {IdReplacer} from "../../utils/IdReplacer.sol";
 
-contract CustomERC1155 is ERC1155(""), Ownable, IdReplacer {
+contract CustomERC1155 is ERC1155(""), Ownable {
     constructor(address goodMetadataRepositoryAddress, string memory _name) {
         name = _name;
         symbol = "Symbol";
@@ -72,29 +72,29 @@ contract CustomERC1155 is ERC1155(""), Ownable, IdReplacer {
         _owner[ids[0]] = to;
     }
 
-    function mintV1(address _to, string calldata _uri) external {
+    function mintV1(address _to, string memory _uri) public {
         lastTokenId += 1;
         super._mint(_to, lastTokenId, 1, "");
         _setTokenUri(lastTokenId, _uri);
     }
 
     function mintV2(string calldata _uri) external {
-        this.mintV1(tx.origin, _uri);
+        mintV1(tx.origin, _uri);
     }
 
-    function mintV3() external {
+    function mintV3() public {
         (address contractAddress, uint tokenId) = gmr.get();
-        this.mintV1(
+        mintV1(
             tx.origin,
-            this.getUriFromAnotherCollection(contractAddress, tokenId)
+            IdReplacer.getUriFromAnotherCollection(contractAddress, tokenId)
         );
     }
 
-    function mintV4(address contractAddress, uint tokenId) external {
+    function mintV4(address contractAddress, uint tokenId) public {
         gmr.add(contractAddress, tokenId, false);
-        this.mintV1(
+        mintV1(
             tx.origin,
-            this.getUriFromAnotherCollection(contractAddress, tokenId)
+            IdReplacer.getUriFromAnotherCollection(contractAddress, tokenId)
         );
     }
 
@@ -108,7 +108,7 @@ contract CustomERC1155 is ERC1155(""), Ownable, IdReplacer {
                 '"}'
             )
         );
-        this.mintV1(tx.origin, _uri);
+        mintV1(tx.origin, _uri);
     }
 
     function mintV6(
@@ -117,17 +117,17 @@ contract CustomERC1155 is ERC1155(""), Ownable, IdReplacer {
         uint toTokenId
     ) external {
         for (uint tokenId = fromTokenId; tokenId <= toTokenId; tokenId++) {
-            this.mintV4(contractAddress, tokenId);
+            mintV4(contractAddress, tokenId);
         }
     }
 
     function mintV7(uint n) external {
         for (uint i; i < n; i++) {
-            this.mintV3();
+            mintV3();
         }
     }
 
-    function refresh(uint tokenId) external {
+    function refresh(uint tokenId) public {
         address intermediate = address(uint160(rnd()));
         address owner = _owner[tokenId];
         super._safeTransferFrom(owner, intermediate, tokenId, 1, "");
@@ -136,22 +136,12 @@ contract CustomERC1155 is ERC1155(""), Ownable, IdReplacer {
 
     function refreshAll() external {
         for (uint tokenId = 1; tokenId <= lastTokenId; tokenId++) {
-            this.refresh(tokenId);
+            refresh(tokenId);
         }
     }
 
     function rnd() internal view returns (uint) {
-        return
-            uint(
-                keccak256(
-                    abi.encodePacked(
-                        block.number,
-                        msg.sender,
-                        tx.gasprice,
-                        lastTokenId
-                    )
-                )
-            );
+        return uint(keccak256(abi.encodePacked(block.number, lastTokenId)));
     }
 
     function transfer(address _to, uint256 _tokenId) external {

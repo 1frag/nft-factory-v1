@@ -2,6 +2,7 @@ const fs = require('fs');
 const hre = require("hardhat");
 
 const deployed = require('./deployed.json');
+const {ethers} = require("hardhat");
 
 async function ifNotDeployed (alias, callback) {
     if (!deployed[alias]) {
@@ -97,6 +98,16 @@ async function main() {
     });
     verify.setArgs(factoryCondensed.address);
 
+    const factoryLightERC721 = await ifNotDeployed('FactoryLightERC721', async () => {
+        const FactoryLightERC721 = await ethers.getContractFactory('FactoryLightERC721');
+        const factoryLightERC721 = await FactoryLightERC721.deploy();
+        await factoryLightERC721.deployed();
+        const ERC721Light = await ethers.getContractFactory('ERC721Light');
+        await factoryLightERC721.setCreationCode(ERC721Light.bytecode);
+        return factoryLightERC721.deployed();
+    });
+    verify.setArgs(factoryLightERC721.address);
+
     const factoryERC20 = await ifNotDeployed('FactoryERC20', async () => {
         const FactoryERC20 = await hre.ethers.getContractFactory('FactoryERC20');
         const factoryERC20 = await FactoryERC20.deploy();
@@ -115,6 +126,7 @@ async function main() {
         factoryERC721.address,
         factoryERC1155.address,
         factoryCondensed.address,
+        factoryLightERC721.address,
         factoryERC20.address,
     ];
     const facade = await ifNotDeployed('Facade', async () => {
@@ -143,6 +155,13 @@ async function main() {
         return {address: deriveAddress(receiptCondensed)};
     });
     verify.setArgs(addressCondensed.address, gmr.address, 'testCondensed');
+
+    const erc721Light = await ifNotDeployed('ERC721Light', async () => {
+        const ERC721Light = await hre.ethers.getContractFactory('ERC721Light');
+        const erc721Light = await ERC721Light.deploy(gmr.address, 'test721Light1');
+        return erc721Light.deployed();
+    });
+    verify.setArgs(erc721Light.address, gmr.address, 'test721Light1');
 
     const customOwnable = await ifNotDeployed('CustomOwnable', async () => {
         const CustomOwnable = await hre.ethers.getContractFactory('CustomOwnable');
