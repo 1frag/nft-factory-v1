@@ -21,4 +21,9 @@ interface IBuilders {
         string calldata name,
         address gmr
     ) external returns (address);
+
+    function create20(
+        string calldata name,
+        string calldata symbol
+    ) external returns (address);
 }

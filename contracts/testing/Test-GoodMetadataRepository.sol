@@ -10,7 +10,7 @@ contract TestGoodMetadataRepository {
         tokenId = _tokenId;
     }
 
-    function get() external returns (address, uint) {
+    function get() external view returns (address, uint) {
         return (contractAddress, tokenId);
     }
 }

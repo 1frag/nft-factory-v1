@@ -28,6 +28,10 @@ async function deploy () {
     const ERC721Light = await ethers.getContractFactory('ERC721Light');
     await factoryLightERC721.setCreationCode(ERC721Light.bytecode);
 
+    const FactoryERC20 = await ethers.getContractFactory('FactoryERC20');
+    const factoryERC20 = await FactoryERC20.deploy();
+    await factoryERC20.deployed();
+
     const Facade = await ethers.getContractFactory('Facade');
     const facade = await Facade.deploy(
         testGoodMetadataRepository.address,
@@ -36,11 +40,12 @@ async function deploy () {
             factoryERC1155.address,
             factoryCondensed.address,
             factoryLightERC721.address,
+            factoryERC20.address,
         ],
     );
     await facade.deployed();
 
-    return [facade, factoryERC721, factoryERC1155, factoryCondensed, factoryLightERC721, testGoodMetadataRepository];
+    return [facade, factoryERC721, factoryERC1155, factoryCondensed, factoryLightERC721, testGoodMetadataRepository, factoryERC20];
 }
 
 it('create*', async function () {
@@ -99,7 +104,7 @@ it('Facade.multiCreate', async () => {
 it('Facade.multiCreate gas cost', async () => {
     const [facade] = await deploy();
     const gas = await facade.estimateGas.lightMultiCreate('test ', 10, 10);
-    expect(gas).to.be.eq(14645478);
+    expect(gas).to.be.eq(14645501);
 
     // show in gas reporter
     const tx = await facade.lightMultiCreate('test ', 10, 10);
