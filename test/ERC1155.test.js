@@ -23,7 +23,7 @@ it('get GoodMetadataRepository address', async function () {
     const test = await Test.deploy();
     await test.deployed();
 
-    const [erc1155] = await loadFixture(deploy);
+    const [erc1155] = await deploy();
 
     const tx = await (await erc1155.mintV4(test.address, '5')).wait();
     expect(tx.events.length).to.be.eq(1);
@@ -53,7 +53,7 @@ it('mintV6', async function () {
     const test = await Test.deploy();
     await test.deployed();
 
-    const [erc1155] = await loadFixture(deploy);
+    const [erc1155] = await deploy();
 
     const tx = await (await erc1155.mintV6(test.address, 2, 7)).wait();
     expect(tx.events.length).to.be.eq(6);
