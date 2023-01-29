@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 import {IERC721Metadata} from "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import {IERC1155MetadataURI} from "@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol";
 
-contract IdReplacer {
+library IdReplacer {
     bytes16 private constant _HEX_SYMBOLS = "0123456789abcdef";
 
     bytes4 private constant SEARCH = "{id}";
@@ -13,7 +13,7 @@ contract IdReplacer {
     function getUriFromAnotherCollection(
         address contractAddress,
         uint tokenId
-    ) external view returns (string memory) {
+    ) internal view returns (string memory) {
         try IERC721Metadata(contractAddress).tokenURI(tokenId) returns (
             string memory result
         ) {
@@ -22,14 +22,14 @@ contract IdReplacer {
             string memory result = IERC1155MetadataURI(contractAddress).uri(
                 tokenId
             );
-            return this.replaceIdInString(result, tokenId);
+            return replaceIdInString(result, tokenId);
         }
     }
 
     function replaceIdInString(
         string memory _uri,
         uint tokenId
-    ) external pure returns (string memory) {
+    ) internal pure returns (string memory) {
         bytes memory uri = bytes(_uri);
         for (uint i; i <= uri.length - SEARCH_LENGTH; i++) {
             uint j;

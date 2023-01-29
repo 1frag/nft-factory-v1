@@ -13,4 +13,8 @@ interface IGoodMetadataRepository {
     function get() external returns (address, uint);
 
     function hashState() external view returns (uint);
+
+    function getSpecifyingRnd(
+        uint _rndValue
+    ) external view returns (address, uint);
 }

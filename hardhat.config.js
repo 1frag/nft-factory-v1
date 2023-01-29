@@ -2,6 +2,7 @@ require('dotenv').config();
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-etherscan");
 require('hardhat-contract-sizer');
+require('hardhat-gas-reporter');
 const ethers = require('ethers');
 
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
@@ -22,11 +23,27 @@ const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 
 module.exports = {
     solidity: {
-        version: '0.8.17',
-        settings: {
-            optimizer: {
-                enabled: true,
-                runs: 200
+        compilers: [
+            {
+                version: '0.8.17',
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 1000000
+                    }
+                }
+            }
+        ],
+        overrides: {
+            'contracts/factories/erc-721-light/ERC721Light.sol': {
+                version: '0.8.17',
+                settings: {
+                    viaIR: true,
+                    optimizer: {
+                        enabled: true,
+                        runs: 10
+                    }
+                }
             }
         }
     },
@@ -46,5 +63,9 @@ module.exports = {
     },
     etherscan: {
         apiKey: ETHERSCAN_API_KEY
+    },
+    gasReporter: {
+        gasPrice: 21,
+        enabled: true
     }
 };

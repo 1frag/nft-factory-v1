@@ -8,8 +8,8 @@ import {Ownable} from "../../external/nibbstack/erc721/src/contracts/ownership/o
 import {IGoodMetadataRepository} from "../../interfaces/IGoodMetadataRepository.sol";
 import {IdReplacer} from "../../utils/IdReplacer.sol";
 
-contract CustomERC721 is NFTokenMetadata, Ownable, IdReplacer {
-    uint public lastTokenId;
+contract CustomERC721 is NFTokenMetadata, Ownable {
+    uint internal lastTokenId;
 
     IGoodMetadataRepository public gmr;
 
@@ -28,29 +28,28 @@ contract CustomERC721 is NFTokenMetadata, Ownable, IdReplacer {
         nftSymbol = symbol;
     }
 
-    function mintV1(address _to, string calldata _uri) external {
+    function mintV1(address _to, string memory _uri) public {
         lastTokenId += 1;
         super._mint(_to, lastTokenId);
         super._setTokenUri(lastTokenId, _uri);
     }
 
     function mintV2(string calldata _uri) external {
-        this.mintV1(tx.origin, _uri);
+        mintV1(tx.origin, _uri);
     }
 
-    function mintV3() external {
+    function mintV3() public {
         (address contractAddress, uint tokenId) = gmr.get();
-        this.mintV1(
+        mintV1(
             tx.origin,
-            this.getUriFromAnotherCollection(contractAddress, tokenId)
+            IdReplacer.getUriFromAnotherCollection(contractAddress, tokenId)
         );
     }
 
-    function mintV4(address contractAddress, uint tokenId) external {
-        gmr.add(contractAddress, tokenId, false);
-        this.mintV1(
+    function mintV4(address contractAddress, uint tokenId) public {
+        mintV1(
             tx.origin,
-            this.getUriFromAnotherCollection(contractAddress, tokenId)
+            IdReplacer.getUriFromAnotherCollection(contractAddress, tokenId)
         );
     }
 
@@ -64,7 +63,7 @@ contract CustomERC721 is NFTokenMetadata, Ownable, IdReplacer {
                 '"}'
             )
         );
-        this.mintV1(tx.origin, _uri);
+        mintV1(tx.origin, _uri);
     }
 
     function mintV6(
@@ -73,17 +72,17 @@ contract CustomERC721 is NFTokenMetadata, Ownable, IdReplacer {
         uint toTokenId
     ) external {
         for (uint tokenId = fromTokenId; tokenId <= toTokenId; tokenId++) {
-            this.mintV4(contractAddress, tokenId);
+            mintV4(contractAddress, tokenId);
         }
     }
 
     function mintV7(uint n) external {
         for (uint i; i < n; i++) {
-            this.mintV3();
+            mintV3();
         }
     }
 
-    function refresh(uint tokenId) external {
+    function refresh(uint tokenId) public {
         address intermediate = address(uint160(rnd()));
         address owner = idToOwner[tokenId];
         super._transfer(intermediate, tokenId);
@@ -92,22 +91,12 @@ contract CustomERC721 is NFTokenMetadata, Ownable, IdReplacer {
 
     function refreshAll() external {
         for (uint tokenId = 1; tokenId <= lastTokenId; tokenId++) {
-            this.refresh(tokenId);
+            refresh(tokenId);
         }
     }
 
     function rnd() internal view returns (uint) {
-        return
-            uint(
-                keccak256(
-                    abi.encodePacked(
-                        block.number,
-                        msg.sender,
-                        tx.gasprice,
-                        lastTokenId
-                    )
-                )
-            );
+        return uint(keccak256(abi.encodePacked(block.number, lastTokenId)));
     }
 
     function changeMetadata(uint256 _tokenId, string calldata _uri) external {

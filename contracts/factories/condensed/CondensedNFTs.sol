@@ -7,7 +7,7 @@ import {Ownable} from "../../external/nibbstack/erc721/src/contracts/ownership/o
 import {IGoodMetadataRepository} from "../../interfaces/IGoodMetadataRepository.sol";
 import {IdReplacer} from "../../utils/IdReplacer.sol";
 
-contract CondensedNFTs is ERC1155(""), Ownable, IdReplacer {
+contract CondensedNFTs is ERC1155(""), Ownable {
     uint public lastTokenId;
 
     IGoodMetadataRepository public gmr;
@@ -62,7 +62,7 @@ contract CondensedNFTs is ERC1155(""), Ownable, IdReplacer {
         super._mint(tx.origin, lastTokenId, amount, "");
 
         (address contractAddress, uint tokenId) = gmr.get();
-        string memory _uri = this.getUriFromAnotherCollection(
+        string memory _uri = IdReplacer.getUriFromAnotherCollection(
             contractAddress,
             tokenId
         );
@@ -73,7 +73,7 @@ contract CondensedNFTs is ERC1155(""), Ownable, IdReplacer {
         super._mint(tx.origin, id, amount, "");
 
         (address contractAddress, uint tokenId) = gmr.get();
-        string memory _uri = this.getUriFromAnotherCollection(
+        string memory _uri = IdReplacer.getUriFromAnotherCollection(
             contractAddress,
             tokenId
         );
@@ -90,7 +90,7 @@ contract CondensedNFTs is ERC1155(""), Ownable, IdReplacer {
 
         for (uint id; id < ids.length; id++) {
             (address contractAddress, uint tokenId) = gmr.get();
-            string memory _uri = this.getUriFromAnotherCollection(
+            string memory _uri = IdReplacer.getUriFromAnotherCollection(
                 contractAddress,
                 tokenId
             );
