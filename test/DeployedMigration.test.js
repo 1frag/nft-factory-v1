@@ -1,6 +1,7 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
 const crypto = require('crypto');
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 
 const randomAddress = () => '0x' + crypto.randomBytes(20).toString('hex');
 

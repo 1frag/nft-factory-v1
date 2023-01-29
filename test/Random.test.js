@@ -2,6 +2,7 @@ const { ethers } = require('hardhat');
 const { expect } = require('chai');
 const { setCode } = require("@nomicfoundation/hardhat-network-helpers");
 const { getInterfaceID } = require("../scripts/utils");
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 
 async function deploy () {
     const TestRandom = await ethers.getContractFactory('TestRandom');
@@ -12,7 +13,7 @@ async function deploy () {
 }
 
 it('Random.randomSymbol()', async () => {
-    const [testRandom] = await deploy();
+    const [testRandom] = await loadFixture(deploy);
 
     const Resolver = await ethers.getContractFactory('CustomResolver');
     const resolver = await Resolver.deploy();

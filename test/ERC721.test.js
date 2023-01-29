@@ -1,5 +1,6 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 
 async function deploy () {
     const GoodMetadataRepository = await ethers.getContractFactory('GoodMetadataRepository');
@@ -29,7 +30,7 @@ it('mintV3', async function () {
 });
 
 it('get GoodMetadataRepository address', async function () {
-    const [erc721, gmr] = await deploy();
+    const [erc721, gmr] = await loadFixture(deploy);
     expect(await erc721.gmr()).to.be.eq(gmr.address);
 });
 
@@ -38,7 +39,7 @@ it('get GoodMetadataRepository address', async function () {
     const test = await Test.deploy();
     await test.deployed();
 
-    const [erc721] = await deploy();
+    const [erc721] = await loadFixture(deploy);
 
     await expect(erc721.mintV4(test.address, '5'))
         .to.emit(erc721, 'Transfer')
@@ -53,7 +54,7 @@ it('get GoodMetadataRepository address', async function () {
 }));
 
 it('mintV5', async function () {
-    const [erc721] = await deploy();
+    const [erc721] = await loadFixture(deploy);
 
     const tx = await (await erc721.mintV5('name', 'https://random.imagecdn.app/200/200')).wait();
     expect(tx.events.length).to.be.eq(1);
@@ -71,14 +72,14 @@ it('mintV6', async function () {
     const test = await Test.deploy();
     await test.deployed();
 
-    const [erc721] = await deploy();
+    const [erc721] = await loadFixture(deploy);
 
     const tx = await (await erc721.mintV6(test.address, 2, 7)).wait();
     expect(tx.events.length).to.be.eq(6);
 });
 
 it('refresh', async function () {
-    const [erc721] = await deploy();
+    const [erc721] = await loadFixture(deploy);
 
     const tx1 = await (await erc721.mintV1(
         '0x0000000000000000000000000000000000000123',
@@ -94,7 +95,7 @@ it('refresh', async function () {
 });
 
 it('refreshAll', async function () {
-    const [erc721] = await deploy();
+    const [erc721] = await loadFixture(deploy);
 
     for (let i = 0; i < 4; i++) {
         const tx1 = await (await erc721.mintV1(

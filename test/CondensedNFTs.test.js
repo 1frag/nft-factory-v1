@@ -1,5 +1,6 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 
 async function deploy () {
     const Test = await ethers.getContractFactory('TestERC721');
@@ -17,7 +18,7 @@ async function deploy () {
 }
 
 it('Check CondensedNFTs marketplace functions', async function () {
-    const [condensed] = await deploy();
+    const [condensed] = await loadFixture(deploy);
 
     let result;
 

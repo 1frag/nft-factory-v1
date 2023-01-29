@@ -1,5 +1,6 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 
 async function deploy () {
     const TestIdReplacer = await ethers.getContractFactory('TestIdReplacer');
@@ -23,7 +24,7 @@ async function deploy () {
     ({tokenId, baseUri, expected}) => it(
         `Test replaceIdInString(${baseUri}, ${tokenId})`,
         async function () {
-            const [testIdReplacer] = await deploy();
+            const [testIdReplacer] = await loadFixture(deploy);
 
             const value = await testIdReplacer.replaceIdInString(baseUri, tokenId);
             expect(value).to.be.eq(expected);

@@ -1,6 +1,7 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
 const { setBalance } = require("@nomicfoundation/hardhat-network-helpers");
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 
 async function deploy () {
     const LeaderBoard = await ethers.getContractFactory('NuanceLeaderBoard');
@@ -15,7 +16,7 @@ async function deploy () {
 }
 
 it('Positive case nuance (many addresses)', async () => {
-    const [leaderBoard, currency] = await deploy();
+    const [leaderBoard, currency] = await loadFixture(deploy);
     await (await currency.setLeaderBoard(leaderBoard.address)).wait();
 
     const balance = [
@@ -46,7 +47,7 @@ it('Positive case nuance (many addresses)', async () => {
 it.skip('Positive case nuance (mint + transfer)', async () => {
     const dead = '0x000000000000000000000000000000000000dEaD';
 
-    const [leaderBoard, currency] = await deploy();
+    const [leaderBoard, currency] = await loadFixture(deploy);
     await (await currency.setLeaderBoard(leaderBoard.address)).wait();
 
     const wallet = ethers.Wallet.createRandom();

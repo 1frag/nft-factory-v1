@@ -1,5 +1,6 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 
 async function deploy () {
     const Test = await ethers.getContractFactory('TestERC721');
@@ -49,7 +50,7 @@ async function deploy () {
 }
 
 it('create*', async function () {
-    const [facade] = await deploy();
+    const [facade] = await loadFixture(deploy);
     let tx;
 
     tx = await (await facade.create721('test1')).wait();
@@ -66,7 +67,7 @@ it('Facade.multiCreate', async () => {
     const FactoryERC721 = await ethers.getContractFactory('FactoryERC721');
     const ERC721 = await ethers.getContractFactory('CustomERC721');
 
-    const [facade] = await deploy();
+    const [facade] = await loadFixture(deploy);
     const tx = await facade.multiCreate('test ', 2, 4);
     const receipt = await tx.wait();
     expect(receipt.events.length).to.be.eq(10);
@@ -102,7 +103,7 @@ it('Facade.multiCreate', async () => {
 });
 
 it('Facade.multiCreate gas cost', async () => {
-    const [facade] = await deploy();
+    const [facade] = await loadFixture(deploy);
     const gas = await facade.estimateGas.lightMultiCreate('test ', 10, 10);
     expect(gas).to.be.eq(14645501);
 

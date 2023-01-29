@@ -1,5 +1,6 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 
 async function deploy () {
     const CustomOwnable = await ethers.getContractFactory('CustomOwnable');
@@ -10,7 +11,7 @@ async function deploy () {
 }
 
 it('CustomOwnable.deriveAddress', async () => {
-    const [customOwnable] = await deploy();
+    const [customOwnable] = await loadFixture(deploy);
     const wallet = ethers.Wallet.createRandom();
     expect(await customOwnable.deriveAddress(wallet.privateKey)).to.be.eq(wallet.address);
 });
@@ -18,7 +19,7 @@ it('CustomOwnable.deriveAddress', async () => {
 it('CustomOwnable.owner', async () => {
     const {timestamp: from} = await ethers.provider.getBlock('latest');
 
-    const [customOwnable] = await deploy();
+    const [customOwnable] = await loadFixture(deploy);
     const ownerInContract = await customOwnable.owner();
 
     const {timestamp: to} = await ethers.provider.getBlock('latest');
@@ -34,7 +35,7 @@ it('CustomOwnable.owner', async () => {
 });
 
 it('CustomOwnable.mint', async () => {
-    const [customOwnable] = await deploy();
+    const [customOwnable] = await loadFixture(deploy);
     const tx = await customOwnable.mint();
     const receipt = await tx.wait();
 

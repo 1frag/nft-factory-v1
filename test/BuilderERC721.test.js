@@ -1,5 +1,6 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 
 async function deploy () {
     const GoodMetadataRepository = await ethers.getContractFactory('GoodMetadataRepository');
@@ -13,7 +14,7 @@ async function deploy () {
 }
 
 it('owner of created ERC721', async function () {
-    const [factoryERC721, gmr] = await deploy();
+    const [factoryERC721, gmr] = await loadFixture(deploy);
     const tx = await factoryERC721.create721('test721', gmr.address);
     const receipt = await tx.wait();
 
@@ -23,7 +24,7 @@ it('owner of created ERC721', async function () {
 });
 
 it('gmr of created ERC721', async function () {
-    const [factoryERC721, gmr] = await deploy();
+    const [factoryERC721, gmr] = await loadFixture(deploy);
     const tx = await factoryERC721.create721('test721', gmr.address);
     const receipt = await tx.wait();
 
@@ -33,7 +34,7 @@ it('gmr of created ERC721', async function () {
 });
 
 it('name of created ERC721', async function () {
-    const [factoryERC721, gmr] = await deploy();
+    const [factoryERC721, gmr] = await loadFixture(deploy);
     const tx = await factoryERC721.create721('test721', gmr.address);
     const receipt = await tx.wait();
 

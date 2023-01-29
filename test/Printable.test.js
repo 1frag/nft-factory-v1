@@ -1,5 +1,6 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 
 async function deploy () {
     const Printable = await ethers.getContractFactory('Printable');
@@ -9,7 +10,7 @@ async function deploy () {
 }
 
 it('Printable.isPrintable()', async () => {
-    const [printable] = await deploy();
+    const [printable] = await loadFixture(deploy);
 
     for (const c of [33, 126, 255, 1000, 32000]) {
         expect(await printable.isPrintable(c)).to.be.true;
@@ -21,7 +22,7 @@ it('Printable.isPrintable()', async () => {
 });
 
 it('Printable.getIthPrintable()', async () => {
-    const [printable] = await deploy();
+    const [printable] = await loadFixture(deploy);
 
     expect(await printable.getIthPrintable(0)).to.be.eq(32);
     expect(await printable.getIthPrintable(2)).to.be.eq(34);

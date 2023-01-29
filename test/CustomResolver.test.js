@@ -1,6 +1,7 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
 const { setCode } = require('@nomicfoundation/hardhat-network-helpers');
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
 
 const CUSTOM_RESOLVER_INTERFACE_ID = '0xee416f7e';
 
@@ -13,7 +14,7 @@ async function deploy () {
 }
 
 it('CustomResolver.setInterfaceImplementer()', async () => {
-    const [resolver] = await deploy();
+    const [resolver] = await loadFixture(deploy);
 
     const testInterfaceId = '0x12345678';
     const testAddress = '0x0000000000000000000000000000000000000123';
@@ -24,7 +25,7 @@ it('CustomResolver.setInterfaceImplementer()', async () => {
 });
 
 it('CustomResolver.resolverAddress()', async () => {
-    const [resolver] = await deploy();
+    const [resolver] = await loadFixture(deploy);
 
     const domain = 'ifrag-dev.ru';
 
