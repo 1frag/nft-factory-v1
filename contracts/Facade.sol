@@ -28,7 +28,10 @@ contract Facade {
         return IBuilders(builders[2]).createCondensed(name, gmr);
     }
 
-    function create20(string calldata name, string calldata symbol) external returns (address) {
+    function create20(
+        string calldata name,
+        string calldata symbol
+    ) external returns (address) {
         return IBuilders(builders[4]).create20(name, symbol);
     }
 
