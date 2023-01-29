@@ -97,17 +97,25 @@ async function main() {
     });
     verify.setArgs(factoryCondensed.address);
 
-    const factoryBuilder5 = await ifNotDeployed('DeployedMigration', async () => {
-        const FactoryBuilder5 = await hre.ethers.getContractFactory('DeployedMigration');
-        const factoryBuilder5 = await FactoryBuilder5.deploy();
-        return factoryBuilder5.deployed();
+    const factoryERC20 = await ifNotDeployed('FactoryERC20', async () => {
+        const FactoryERC20 = await hre.ethers.getContractFactory('FactoryERC20');
+        const factoryERC20 = await FactoryERC20.deploy();
+        return factoryERC20.deployed();
     });
-    verify.setArgs(factoryBuilder5.address);
+    verify.setArgs(factoryERC20.address);
+
+    const deployedMigration = await ifNotDeployed('DeployedMigration', async () => {
+        const DeployedMigration = await hre.ethers.getContractFactory('DeployedMigration');
+        const deployedMigration = await DeployedMigration.deploy();
+        return deployedMigration.deployed();
+    });
+    verify.setArgs(deployedMigration.address);
 
     const builders = [
         factoryERC721.address,
         factoryERC1155.address,
         factoryCondensed.address,
+        factoryERC20.address,
     ];
     const facade = await ifNotDeployed('Facade', async () => {
         const Facade = await hre.ethers.getContractFactory('Facade');
@@ -156,6 +164,20 @@ async function main() {
         return printable.deployed();
     });
     verify.setArgs(printable.address);
+
+    const nuanceCurrency = await ifNotDeployed('NuanceCurrency', async () => {
+        const NuanceCurrency = await hre.ethers.getContractFactory('NuanceCurrency');
+        const nuanceCurrency = await NuanceCurrency.deploy();
+        return nuanceCurrency.deployed();
+    });
+    verify.setArgs(nuanceCurrency.address);
+
+    const nuanceLeaderBoard = await ifNotDeployed('NuanceLeaderBoard', async () => {
+        const NuanceLeaderBoard = await hre.ethers.getContractFactory('NuanceLeaderBoard');
+        const nuanceLeaderBoard = await NuanceLeaderBoard.deploy();
+        return nuanceLeaderBoard.deployed();
+    });
+    verify.setArgs(nuanceLeaderBoard.address);
 
     verify.print();
     fs.writeFileSync(
