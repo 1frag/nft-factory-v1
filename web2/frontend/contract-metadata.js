@@ -10,11 +10,9 @@ const CONTRACTS_METADATA = {
         },
         '0x51755081a77a6dca2059d668e536a44e32719b865de8701a3e834c7cf9bd975f': {
             type: 'CondensedNFTs',
-            supportCrossChainMint: true,
         },
         '0x18b92fcc7d11b8b35c02ff27e8160298725fdcab5e6e8fff12dd01cb75ca4fe4': {
             type: 'CondensedNFTs',
-            supportCrossChainMint: true,
         },
         '0x5aaff3a9a632980732a646a77e85df8a5675432bf0f47fba76be8724f0c1d117': {
             type: 'ERC721Light',
@@ -44,7 +42,6 @@ const CONTRACTS_METADATA = {
         },
         '0xfda9e815a804107adb177f97f30489605b7d6a62e88dfdd435727ea460a4f04d': {
             type: 'ERC20',
-            supportCrossChainMint: true,
         }
     },
     builders: [

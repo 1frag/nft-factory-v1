@@ -63,15 +63,22 @@
     });
 
     async function onLoad() {
+        await ensureCorrectNetwork('ok, но сайт будет пустой');
+
         let _i = 0;
         const contacts = await getDeployedContracts();
         for (const {address, blockNumber, builderAddress, transactionHash} of contacts) {
             const ind = ++_i;
+            const hashInfo = hashesInfo[hashByBuilder[builderAddress]];
+
             $('#tbody-1').html($('#tbody-1').html() + `
             <tr>
                 <th scope="row">${ind}</th>
                 <td><a href="https://${network}.etherscan.io/address/${address}#code" target="_blank">${address}</a></td>
-                <td><a href="https://${marketplaceDomain}/collections/${address}" target="_blank">🔗</a></td>
+                <td>
+                    <a href="https://${marketplaceDomain}/collections/${address}" target="_blank">🔗</a>
+                    ${hashInfo.supportCrossChainMint ? mintNewAction(address) : ''}
+                </td>
                 <td id="tbody1-tr-td1-${ind}"></td>
                 <td id="tbody1-tr-td2-${ind}"></td>
                 <td class="tbody1-tr-${blockNumber}" __transactionHash="${transactionHash}"></td>
@@ -82,7 +89,6 @@
                 ['function name() public view returns (string memory)'],
                 provider,
             );
-            const hashInfo = hashesInfo[hashByBuilder[builderAddress]];
             $(`#tbody1-tr-td2-${ind}`).html(hashInfo.type);
 
             contract.name().then(v => $(`#tbody1-tr-td1-${ind}`).html(v));

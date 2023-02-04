@@ -9,7 +9,7 @@ class HTTPClient {
     static async request(method, url, json) {
         const response = await fetch(url, {
             method: method,
-            headers: {'Content-Type': 'application/json'},
+            headers: json ? {'Content-Type': 'application/json'} : undefined,
             body: json ? JSON.stringify(json) : undefined
         });
         return response.json();
@@ -22,6 +22,10 @@ class HTTPClient {
     static put (url) {
         return this.request('PUT', url);
     }
+
+    static get (url) {
+        return this.request('GET', url);
+    }
 }
 
 
@@ -31,7 +35,7 @@ class BlockByNumberService {
      * @returns {Promise<Block[]>}
      */
     static async get(blockNumbers) {
-        const {blocks} = await HTTPClient.post(backendBaseURL, blockNumbers);
+        const {blocks} = await HTTPClient.post(`${backendBaseURL}/BlockByNumber`, blockNumbers);
         return blocks.map(block => ({
             blockNumber: block.block_number,
             timestamp: block.timestamp,
@@ -40,6 +44,20 @@ class BlockByNumberService {
     }
 
     static async clarify(blockNumber) {
-        return HTTPClient.put(`${backendBaseURL}/${blockNumber}`);
+        return HTTPClient.put(`${backendBaseURL}/BlockByNumber/${blockNumber}`);
     }
+}
+
+async function resolveContactAddress (identifier) {
+    return HTTPClient
+        .get(`${backendBaseURL}/ResolveAddress/${identifier}`)
+        .then(({contractAddress}) => contractAddress)
+        .catch(() => null)
+}
+
+async function getTokenURI (contractAddress, tokenId) {
+    return HTTPClient
+        .get(`${backendBaseURL}/GetTokenURI/${contractAddress}/${tokenId}`)
+        .then(({data}) => data)
+        .catch(() => null)
 }

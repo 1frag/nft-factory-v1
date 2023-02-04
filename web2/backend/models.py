@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -11,3 +11,11 @@ class Block(BaseModel):
 
 class BatchGetBlocksResponse(BaseModel):
     blocks: List[Block]
+
+
+class ResolveAddressResponse(BaseModel):
+    contractAddress: str
+
+
+class GetTokenURIResponse(BaseModel):
+    data: Optional[str]

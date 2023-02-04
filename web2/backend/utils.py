@@ -46,3 +46,17 @@ def state_prettifier(values):
             yield value
 
     return sorted(filtered(), key=lambda v: v['block_number'])
+
+
+def hex_concat(*values):
+    return '0x' + ''.join([*map(lambda v: v.replace('0x', ''), values)])
+
+
+def encode_uint(value):
+    return '0x' + hex(int(value)).replace('0x', '').rjust(64, '0')
+
+
+def decode_string(value):
+    length = int(value[2 + 64:2 + 64 + 64], 16)
+    data = bytes.fromhex(value[2 + 64 + 64:2 + 64 + 64 + length * 2])
+    return data.decode('utf-8')
