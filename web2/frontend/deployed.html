@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Deployed</title>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 </head>
 <body>
 
@@ -35,7 +36,6 @@
     const network = 'goerli';
 
     const provider = new ethers.providers.Web3Provider(window.ethereum, network);
-    const meta = {};
 
     /**
      * @type {(function(): Promise<{address: string, blockNumber: number}[]>)}
