@@ -1,5 +1,5 @@
 {
-  "block_number_to_timestamp": [
+  "block_number_to_timestamp_goerli": [
     {
       "block_number": 8135036,
       "timestamp": 1562917303
