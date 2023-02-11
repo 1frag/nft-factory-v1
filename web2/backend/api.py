@@ -91,6 +91,8 @@ def get_token_uri(address: str, token_id: str):
             )
         ).json()
         if (result := response.get('result', '0x')) != '0x':
-            return GetTokenURIResponse(data=decode_string(result))
+            token_uri = decode_string(result)
+            token_uri = token_uri.replace('{id}', hex(int(token_id))[2:].rjust(64, '0'))
+            return GetTokenURIResponse(data=token_uri)
 
     return GetTokenURIResponse(data=None)
