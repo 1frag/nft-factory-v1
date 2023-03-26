@@ -198,6 +198,13 @@ async function main() {
     });
     verify.setArgs(nuanceLeaderBoard.address);
 
+    const immutableGoodMetadataRepository = await ifNotDeployed('ImmutableGoodMetadataRepository', async () => {
+        const ImmutableGoodMetadataRepository = await hre.ethers.getContractFactory('ImmutableGoodMetadataRepository');
+        const immutableGoodMetadataRepository = await ImmutableGoodMetadataRepository.deploy();
+        return immutableGoodMetadataRepository.deployed();
+    });
+    verify.setArgs(immutableGoodMetadataRepository.address);
+
     verify.print();
     fs.writeFileSync(
         `./scripts/deployed.json`,
