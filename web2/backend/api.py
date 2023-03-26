@@ -1,13 +1,32 @@
 from typing import List
+from eth_account.messages import encode_defunct
+from eth_account import Account
 
 import requests
-from fastapi import Body, APIRouter
+from fastapi import Body, APIRouter, HTTPException
 
+from repositories.ethereum import EthereumRepository
+from repositories.hidden import HiddenRepository
 from storage import storage
 from constants import BLOCK_NUMBER_TO_TIMESTAMP_KEY
-from models import BatchGetBlocksResponse, Block, ResolveAddressResponse, GetTokenURIResponse
+from models import (
+    BatchGetBlocksResponse,
+    Block,
+    ResolveAddressResponse,
+    GetTokenURIResponse,
+    HiddenItemsResponse,
+)
 from settings import settings
-from utils import approximate_block, between, rpc_command, state_prettifier, hex_concat, encode_uint, decode_string
+from utils import (
+    approximate_block,
+    between,
+    rpc_command,
+    state_prettifier,
+    hex_concat,
+    encode_uint,
+    decode_string,
+    log_is_deployed,
+)
 
 router = APIRouter()
 
@@ -80,13 +99,13 @@ def get_token_uri(address: str, token_id: str):
         response = requests.post(
             settings.mainnet_rpc_url,
             json=rpc_command(
-                'eth_call',
-                [
+                method='eth_call',
+                params=[
                     {
-                        "to": address,
-                        "data": hex_concat(method_id, encode_uint(token_id)),
+                        'to': address,
+                        'data': hex_concat(method_id, encode_uint(token_id)),
                     },
-                    "latest"
+                    'latest'
                 ],
             )
         ).json()
@@ -96,3 +115,54 @@ def get_token_uri(address: str, token_id: str):
             return GetTokenURIResponse(data=token_uri)
 
     return GetTokenURIResponse(data=None)
+
+
+@router.post('/HideAddress/hide/{address}', status_code=204)
+def hide_address(
+    address: str,
+    signature: str = Body(...),
+    transaction_hash: str = Body(...),
+):
+    hidden = HiddenRepository()
+    ethereum = EthereumRepository()
+
+    logs = ethereum.get_transaction_logs(transaction_hash)
+
+    if not any(map(log_is_deployed(address), logs)):
+        raise HTTPException(400, {'error': 'Invalid transaction hash'})
+
+    deployer = ethereum.get_transaction_initiator(transaction_hash)
+    message = encode_defunct(text=f'Скрыть от всех: {address}')
+
+    if deployer != Account.recover_message(message, signature=signature).lower():
+        raise HTTPException(403, {'error': 'Invalid signature'})
+
+    hidden.add(address, deployer)
+
+
+@router.get('/HideAddress', response_model=HiddenItemsResponse)
+def get_hidden_addresses():
+    return HiddenItemsResponse(items=HiddenRepository().list())
+
+
+@router.post('/HideAddress/unhide/{address}', status_code=204)
+def unhide_address(
+    address: str,
+    signature: str = Body(...),
+    transaction_hash: str = Body(...),
+):
+    hidden = HiddenRepository()
+    ethereum = EthereumRepository()
+
+    logs = ethereum.get_transaction_logs(transaction_hash)
+
+    if not any(map(log_is_deployed(address), logs)):
+        raise HTTPException(400, {'error': 'Invalid transaction hash'})
+
+    deployer = ethereum.get_transaction_initiator(transaction_hash)
+    message = encode_defunct(text=f'Показывать всем: {address}')
+
+    if deployer != Account.recover_message(message, signature=signature).lower():
+        raise HTTPException(403, {'error': 'Invalid signature'})
+
+    hidden.remove(address, deployer)

@@ -19,3 +19,12 @@ class ResolveAddressResponse(BaseModel):
 
 class GetTokenURIResponse(BaseModel):
     data: Optional[str]
+
+
+class HiddenItem(BaseModel):
+    contract_address: str
+    owner: str
+
+
+class HiddenItemsResponse(BaseModel):
+    items: List[HiddenItem]

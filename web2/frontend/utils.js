@@ -118,3 +118,45 @@ async function startMintNew(address) {
     );
     await (await contract.mintV2(uri)).wait()
 }
+
+function hideActionText(isHidden) {
+    if (isHidden) {
+        return '🫣';
+    } else {
+        return '😳';
+    }
+}
+
+async function hide(span, address, transactionHash) {
+    const signer = await getSigner();
+    const {from} = await signer.provider.getTransaction(transactionHash);
+    if (from.toLowerCase() !== (await signer.getAddress()).toLowerCase()) {
+        alert(`Необходимо законнектить кошелек: ${from}. т.к. он деплоил этот адрес`);
+        span.style.display = 'none';
+        return;
+    }
+    const ownedMode = hiddenItemsService.owner(address);
+    const signature = await signer.signMessage(`${ownedMode ? 'Показывать всем' : 'Скрыть от всех'}: ${address}`);
+    if (ownedMode) {
+        await unhideAddress(address, transactionHash, signature);
+    } else {
+        await hideAddress(address, transactionHash, signature);
+    }
+    span.innerHTML = hideActionText(ownedMode);
+    span.parentNode.parentNode.style.opacity = 0.5;
+    document.getElementById(`action-hide-`);
+}
+
+function hideAction(address, transactionHash, isHidden) {
+    return `<span
+        id="action-hide-${address}"
+        data-toggle="tooltip"
+        data-placement="top"
+        style="cursor: pointer; font-size: 1rem; color: #007700; line-height: 0;"
+        onClick='${hide.name}(this, "${address}", "${transactionHash}")'
+    >${hideActionText(!isHidden)}</span>`
+}
+
+function enumerate(arr, {start = 0}) {
+    return arr.map((v, ind) => [v, start + ind]);
+}

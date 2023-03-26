@@ -61,3 +61,32 @@ async function getTokenURI (contractAddress, tokenId) {
         .then(({data}) => data)
         .catch(() => null)
 }
+
+async function hideAddress (contractAddress, transactionHash, signature) {
+    await HTTPClient
+        .post(`${backendBaseURL}/HideAddress/hide/${contractAddress}`, {
+            transaction_hash: transactionHash,
+            signature,
+        })
+        .then(({data}) => data)
+        .catch(() => null)
+    hiddenItemsService.loading();
+}
+
+async function unhideAddress (contractAddress, transactionHash, signature) {
+    await HTTPClient
+        .post(`${backendBaseURL}/HideAddress/unhide/${contractAddress}`, {
+            transaction_hash: transactionHash,
+            signature,
+        })
+        .then(({data}) => data)
+        .catch(() => null)
+    hiddenItemsService.loading();
+}
+
+async function getHiddenItems () {
+    return HTTPClient
+        .get(`${backendBaseURL}/HideAddress`)
+        .then(({items}) => items)
+        .catch(() => null)
+}

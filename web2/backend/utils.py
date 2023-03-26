@@ -38,7 +38,6 @@ def approximate_block(from_block: Block, block_number: int, to_block: Block) -> 
 def state_prettifier(values):
     def filtered():
         seen = set()
-        print(values)
         for value in values:
             if value['block_number'] in seen:
                 continue
@@ -60,3 +59,13 @@ def decode_string(value):
     length = int(value[2 + 64:2 + 64 + 64], 16)
     data = bytes.fromhex(value[2 + 64 + 64:2 + 64 + 64 + length * 2])
     return data.decode('utf-8')
+
+
+def log_is_deployed(address: str):
+    def check(log) -> bool:
+        if log['topics'] != ['0xf40fcec21964ffb566044d083b4073f29f7f7929110ea19e1b3ebe375d89055e']:
+            return False
+
+        return int(log['data'], 16) == int(address, 16)
+
+    return check

@@ -20,5 +20,12 @@ class Storage:
         json.dump(self.state, open(self._file_name, 'w'))
         return self
 
+    def remove(self, key, value):
+        try:
+            self.state[key].remove(value)
+        except ValueError:
+            print('already removed', key, value)
+        return self
+
 
 storage = Storage()

@@ -1,2 +1,3 @@
 BLOCKCHAIN_NETWORK = 'goerli'
 BLOCK_NUMBER_TO_TIMESTAMP_KEY = 'block_number_to_timestamp_' + BLOCKCHAIN_NETWORK
+HIDDEN_KEY = 'hidden'

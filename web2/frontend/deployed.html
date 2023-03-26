@@ -28,6 +28,7 @@
 <script src="utils.js"></script>
 <script src="contract-metadata.js"></script>
 <script src="interactions.js"></script>
+<script src="hidden-items-service.js"></script>
 
 <script>
     const {sortBy, map} = _;
@@ -36,6 +37,8 @@
     const network = 'goerli';
 
     const provider = new ethers.providers.Web3Provider(window.ethereum, network);
+
+    const hiddenItemsService = new HiddenItemsService();
 
     /**
      * @type {(function(): Promise<{address: string, blockNumber: number}[]>)}
@@ -59,41 +62,44 @@
                 });
             }
         }
-        return sortBy(contracts, 'blockNumber').reverse();
+        return enumerate(sortBy(contracts, 'blockNumber'), {start: 1}).reverse();
     });
 
     async function onLoad() {
         await ensureCorrectNetwork('ok, но сайт будет пустой');
 
-        let _i = 0;
         const contacts = await getDeployedContracts();
-        for (const {address, blockNumber, builderAddress, transactionHash} of contacts) {
-            const ind = ++_i;
+        await hiddenItemsService.waitLoading();
+        for (const [{address, blockNumber, builderAddress, transactionHash}, ind] of contacts) {
             const hashInfo = hashesInfo[hashByBuilder[builderAddress]];
+            const isHidden = hiddenItemsService.isHidden(address);
 
-            $('#tbody-1').html($('#tbody-1').html() + `
-            <tr>
+            $('#tbody-1').append(`
+            <tr class="contract" __contractAddress="${address}"
+                style="display: ${isHidden ? 'none' : ''}">
                 <th scope="row">${ind}</th>
                 <td><a href="https://${network}.etherscan.io/address/${address}#code" target="_blank">${address}</a></td>
                 <td>
                     <a href="https://${marketplaceDomain}/collections/${address}" target="_blank">🔗</a>
                     ${hashInfo.supportCrossChainMint ? mintNewAction(address) : ''}
+                    ${hideAction(address, transactionHash, isHidden)}
                 </td>
                 <td id="tbody1-tr-td1-${ind}"></td>
-                <td id="tbody1-tr-td2-${ind}"></td>
+                <td id="tbody1-tr-td2-${ind}">${hashInfo.type}</td>
                 <td class="tbody1-tr-${blockNumber}" __transactionHash="${transactionHash}"></td>
-            </tr>
-            `);
+            </tr>`);
             const contract = new ethers.Contract(
                 address,
                 ['function name() public view returns (string memory)'],
                 provider,
             );
-            $(`#tbody1-tr-td2-${ind}`).html(hashInfo.type);
+            $(`#action-hide-${address}`).tooltip({
+                title: () => hiddenItemsService.owner() ? 'Unhide address' : 'Hide address'
+            });
 
             contract.name().then(v => $(`#tbody1-tr-td1-${ind}`).html(v));
         }
-        BlockByNumberService.get(map(contacts, 'blockNumber'))
+        BlockByNumberService.get(map(contacts, c => c[0].blockNumber))
             .then(blocks => {
                 blocks.forEach(block => {
                     Array.from(
@@ -109,7 +115,56 @@
     }
 
     window.addEventListener('load', onLoad);
+    hiddenItemsService.loading();
+
+    let currentTab = 'public';
+    async function changeTab(tab) {
+        if (tab === currentTab) {
+            return;
+        }
+        currentTab = tab;
+        if (tab === 'public') {
+            hiddenItemsService.setTargetOwner(null);
+            document.getElementById('public-tab').className = 'nav-link active';
+            document.getElementById('my-collection-tab').className = 'nav-link';
+        } else {
+            const address = await (await getSigner()).getAddress();
+            hiddenItemsService.setTargetOwner(address.toLowerCase());
+            document.getElementById('public-tab').className = 'nav-link';
+            document.getElementById('my-collection-tab').className = 'nav-link active';
+        }
+
+        Array.from(document.getElementsByClassName('contract')).forEach(element => {
+            const address = element.getAttribute('__contractAddress');
+            const needToBeHidden = hiddenItemsService.isHidden(address);
+            const isHidden = element.style.display === 'none';
+            if (isHidden ^ needToBeHidden) {
+                element.style.display = needToBeHidden ? 'none' : '';
+            }
+            if (element.style.opacity !== 1) {
+                element.style.opacity = 1;
+            }
+        });
+    }
 </script>
+
+<ul class="nav nav-pills">
+  <li class="nav-item">
+    <a class="nav-link active"
+        id="public-tab"
+        aria-current="page"
+        style="cursor: pointer;"
+        onclick="changeTab('public')"
+    >Public</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link"
+       id="my-collection-tab"
+       style="cursor: pointer;"
+       onclick="changeTab('my-collections')"
+    >My collections</a>
+  </li>
+</ul>
 
 <table class="table">
     <thead>
