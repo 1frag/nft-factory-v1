@@ -2,3 +2,4 @@ pydantic[dotenv]==1.10.4
 requests==2.27.1
 fastapi==0.89.1
 uvicorn==0.20.0
+web3==6.0.0
