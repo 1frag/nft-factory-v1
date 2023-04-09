@@ -1,0 +1,58 @@
+@startuml
+
+class "Точка входа \n пользователя (Facade)" as facade {
+    1. address create_erc721(name: String)
+    2. address create_erc1155(name: String)
+    3. address create_condensed(name: String)
+    4. address create_erc20(name: String, symbol: String)
+    5. address[] create_light_erc721(\n\t name: String, contracts: Int, tokens: Int)
+}
+
+class "Фабрика \n ERC-721" as factory721
+class "Фабрика \n ERC-1155" as factory1155
+class "Фабрика \n condensed NFT" as factory_condensed
+class "Фабрика \n ERC-20" as factory20
+class "Фабрика \n легковесных \n ERC-721" as factory_light_721
+
+class "ERC-721 \n коллекция" as erc721
+class "ERC-1155 \n коллекция" as erc1155
+class "Condensed \n коллекция" as condensed
+class "ERC-20 \n коллекция" as erc20
+class "Легковесная \n ERC-721 \n коллекция" as light_erc721
+
+interface "Репозиторий метаданных" as repo_metadata
+class "Репозиторий \n хороших \n метаданных" as grm
+class "Репозиторий \n случайных \n метаданных" as rrm
+
+repo_metadata <|.. grm
+repo_metadata <|.. rrm
+
+package "Точки входа автотестов" as aqa_entry {
+    class "Контракт \n со случайным \n владельцем" as random_contract_owner
+    class "Контракт \n со случайной \n метадатой" as random_token_metadata
+}
+
+facade -d-> factory721: использует
+facade -d-> factory1155: использует
+facade -d-> factory_condensed: использует
+facade -d-> factory20: использует
+facade -d-> factory_light_721: использует
+
+factory721 -d-> erc721: создает
+factory1155 -d-> erc1155: создает
+factory_condensed -d-> condensed: создает
+factory20 -d-> erc20: создает
+factory_light_721 -d-> light_erc721: создает
+
+erc721 -d-> repo_metadata: использует
+erc1155 -d-> repo_metadata: использует
+condensed -d-> repo_metadata: использует
+light_erc721 -d-> repo_metadata: использует
+
+random_token_metadata -> rrm: использует
+
+random_contract_owner -[hidden]d-> random_token_metadata
+
+note right of grm: Используется всеми \n ERC-721/1155 коллекциями
+
+@enduml

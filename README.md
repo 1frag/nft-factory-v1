@@ -71,3 +71,5 @@ Group 2023.01.12
   "ERC721Light": "0x1b95fafCD75871736C277C36Fef439efCae1BCBe"
 }
 ```
+
+Other deployed contracts see in ./scripts/deployed.json
