@@ -9,13 +9,11 @@ object "Уникальный \n ERC20 токен" as token_20
 object "Уникальный \n ERC721 токен" as token_721
 object "Уникальный \n ERC1155 токен" as token_1155
 
-object "Метаданные \n токена" as metadata
-
-package "Спецификации \n контрактов" as erc #DDDDDD {
-    interface "ERC20" as erc20
-    interface "ERC721" as erc721
-    interface "ERC1155" as erc1155
-    interface "ERC173" as erc173
+package "Спецификации \n контрактов        " as erc #DDDDDD {
+    object "«interface» \nERC20" as erc20
+    object "«interface» \nERC721" as erc721
+    object "«interface» \nERC1155" as erc1155
+    object "«interface» \nERC173" as erc173
     erc173 .> erc721
     erc173 .> erc1155
 }
@@ -29,21 +27,18 @@ erc20 <|.. erc20_c
 erc721 <|.. erc721_c
 erc1155 <|.. erc1155_c
 
-erc20_c ||--|| token_20
-erc721_c ||--|{ token_721
-erc1155_c ||--|{ token_1155
+erc20_c "1" -- "1" token_20
+erc721_c "1" o-- "1..*" token_721
+erc1155_c "1" o-- "1..*" token_1155
 
-token_20 ||--|{ token_owner
-token_721 ||--|| token_owner
-token_1155 ||--|{ token_owner
+token_20 "1" -- "1..*" token_owner
+token_721 "1" --- "1    " token_owner
+token_1155 "1" -- "\n    1..*" token_owner
 
-token_1155 }|-r-|| metadata
-token_721 }|-r-|| metadata
+token_20 -r[hidden]- token_721
+token_721 -r[hidden]- token_1155
+token_1155 -r[hidden]- token_20
 
-token_20 }|-r[hidden]-|| token_721
-token_721 }|-r[hidden]-|| token_1155
-token_1155 }|-r[hidden]-|| token_20
-
-erc173 -> contract_owner
+contract_owner .> erc173
 
 @enduml

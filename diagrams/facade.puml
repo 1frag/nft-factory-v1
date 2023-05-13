@@ -1,0 +1,16 @@
+@startuml
+actor       Пользователь as user
+participant Facade as facade
+participant "Контракт фабрики" as factory
+participant "Клонируемый \nконтракт" as contract
+
+user -> facade : Вызывает действие
+facade -> facade : Получает адрес \nконтракта фабрики
+facade -> factory
+factory -> contract : Получает байткод \nконтракта
+contract -> factory
+factory -> factory : Выполняет развертывание
+factory -> factory : Создает лог развертывания
+factory -> facade
+facade -> user
+@enduml
