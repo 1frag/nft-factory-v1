@@ -2,15 +2,27 @@
 left to right direction
 
 user as "Пользователь"
-user -- (Создать контракт-коллекцию)
-(Создать контракт-коллекцию) <|-- (Создать ERC-721 контракт)
-(Создать контракт-коллекцию) <|-- (Создать ERC-1155 контракт)
-(Создать контракт-коллекцию) <|-- (Создать контракт с\nконденсированными токенами)
-(Создать контракт-коллекцию) <.. (Стать владельцем коллекции)
-user -- (Создать контракт-валюту)
-user -- (Посмотреть список контрактов)
-user -- (Создать токены в\nсозданных контрактах)
-(Создать токены в\nсозданных контрактах) <.. (Использовать метаданные \nдругого токена)
-(Создать токены в\nсозданных контрактах) <.. (Использовать метаданные \nслучайного токена)
-(Создать токены в\nсозданных контрактах) <.. (Задать метаданные токена)
+(Создать контракт коллекцию) as create_collection
+(Создать ERC-721 контракт) as create721
+(Создать ERC-1155 контракт) as create1155
+(Создать контракт с\nконденсированными токенами) as create_condensed
+(Стать владельцем коллекции) as be_owner
+(Создать контракт валюту) as create20
+(Посмотреть список контрактов) as list_contracts
+(Создать токены в\nсозданных контрактах) as create_token
+(Использовать метаданные \nдругого токена) as use_metadata_from_diff_token
+(Использовать метаданные \nслучайного токена) as use_metadata_from_random_token
+(Задать метаданные токена) as set_metadata
+
+user -- create_collection
+create_collection <|-- create721
+create_collection <|-- create1155
+create_collection <|-- create_condensed
+create_collection <.. be_owner: ""«extend»""
+user -- create20
+user -- list_contracts
+user -- create_token
+create_token <.. use_metadata_from_diff_token: ""«extend»""
+create_token <.. use_metadata_from_random_token: ""«extend»""
+create_token <.. set_metadata: ""«extend»""
 @enduml

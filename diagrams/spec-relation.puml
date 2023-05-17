@@ -1,19 +1,19 @@
 @startuml
 left to right direction
 
-object "ERC20 \n контракт" as erc20_c
-object "ERC721 \n контракт" as erc721_c
-object "ERC1155 \n контракт" as erc1155_c
+object "ERC-20 \n контракт" as erc20_c
+object "ERC-721 \n контракт" as erc721_c
+object "ERC-1155 \n контракт" as erc1155_c
 
-object "Уникальный \n ERC20 токен" as token_20
-object "Уникальный \n ERC721 токен" as token_721
-object "Уникальный \n ERC1155 токен" as token_1155
+object "Уникальный \n ERC-20 токен" as token_20
+object "Уникальный \n ERC-721 токен" as token_721
+object "Уникальный \n ERC-1155 токен" as token_1155
 
 package "Спецификации \n контрактов        " as erc #DDDDDD {
-    object "«interface» \nERC20" as erc20
-    object "«interface» \nERC721" as erc721
-    object "«interface» \nERC1155" as erc1155
-    object "«interface» \nERC173" as erc173
+    object "«interface» \nERC-20" as erc20
+    object "«interface» \nERC-721" as erc721
+    object "«interface» \nERC-1155" as erc1155
+    object "«interface» \nERC-173" as erc173
     erc173 .> erc721
     erc173 .> erc1155
 }

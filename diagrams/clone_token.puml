@@ -1,0 +1,17 @@
+@startuml
+actor       Пользователь as user
+participant "Сайт" as front
+participant "Сервер" as back
+participant "Блокчейн" as eth
+
+user -> front: Выбирает коллекцию
+front -> user: Запрашивает\nклонируемый\nтокен
+user -> front
+front -> back: Запрашивает\nметаданные\nтокена
+back -> eth: Вызывает функции\ntokenURI и uri
+eth -> back
+back -> front
+front -> eth: Вызывает\nфункцию создания токена\nпо определенным метаданным
+eth -> front
+front -> user: Выдает ссылку\nна транзакцию
+@enduml

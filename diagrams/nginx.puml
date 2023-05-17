@@ -1,0 +1,14 @@
+@startuml
+
+user as "Пользователь"
+component "Веб-сервер\nNginx" as nginx
+component "Контракт Facade\nв Etherscan" as etherscan
+component "Список созданных\nконтрактов" as app
+
+user -r[#red]-> nginx
+nginx -r[#red]-> etherscan
+nginx -r-> app
+
+etherscan -d[hidden]-> app
+
+@enduml

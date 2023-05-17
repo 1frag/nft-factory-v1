@@ -1,0 +1,16 @@
+@startuml
+actor       User as user
+participant Facade as facade
+participant "Factory contract" as factory
+participant "Cloned contract" as contract
+
+user -> facade : Call action
+facade -> facade : Get factory address
+facade -> factory
+factory -> contract : Get contract bytecode
+contract -> factory
+factory -> factory : Deploy contract
+factory -> factory : Create deploy log
+factory -> facade
+facade -> user
+@enduml

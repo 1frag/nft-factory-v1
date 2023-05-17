@@ -1,0 +1,16 @@
+@startuml
+left to right direction
+
+user as "User"
+user -- (Create a collection contract)
+(Create a collection contract) <|-- (Create an ERC-721 contract)
+(Create a collection contract) <|-- (Create an ERC-1155 contract)
+(Create a collection contract) <|-- (Create a contract with \ncondensed tokens)
+(Create a collection contract) <.. (Become the owner of the collection)
+user -- (Create a currency contract)
+user -- (View the list of contracts)
+user -- (Create tokens in \ncreated contracts)
+(Create tokens in \ncreated contracts) <.. (Use the metadata of another token)
+(Create tokens in \ncreated contracts) <.. (Use random token metadata)
+(Create tokens in \ncreated contracts) <.. (Set token metadata)
+@enduml

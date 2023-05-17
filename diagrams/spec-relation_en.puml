@@ -1,0 +1,44 @@
+@startuml
+left to right direction
+
+object "ERC20 \n contract" as erc20_c
+object "ERC721 \n contract" as erc721_c
+object "ERC1155 \n contract" as erc1155_c
+
+object "Unique \n ERC20 token" as token_20
+object "Unique \n ERC721 token" as token_721
+object "Unique \n ERC1155 token" as token_1155
+
+package "Specifications of \n contracts" as erc #DDDDDD {
+    object "«interface» \nERC20" as erc20
+    object "«interface» \nERC721" as erc721
+    object "«interface» \nERC1155" as erc1155
+    object "«interface» \nERC173" as erc173
+    erc173 .> erc721
+    erc173 .> erc1155
+}
+
+package "External \naccounts" as wallet #DDDDDD {
+    object "Account \n of the owner \n of the token" as token_owner
+    object "Account \n of the owner \n of the contract" as contract_owner
+}
+
+erc20 <|.. erc20_c
+erc721 <|.. erc721_c
+erc1155 <|.. erc1155_c
+
+erc20_c "1" -- "1" token_20
+erc721_c "1" o-- "1..*" token_721
+erc1155_c "1" o-- "1..*" token_1155
+
+token_20 "1" -- "1..*" token_owner
+token_721 "1" --- "1    " token_owner
+token_1155 "1" -- "\n    1..*" token_owner
+
+token_20 -r[hidden]- token_721
+token_721 -r[hidden]- token_1155
+token_1155 -r[hidden]- token_20
+
+contract_owner .> erc173
+
+@enduml
